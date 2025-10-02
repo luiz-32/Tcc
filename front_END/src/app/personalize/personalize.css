@@ -1,0 +1,109 @@
+.personalize-container {
+  background-color: #fdfcf7; /* Fundo claro */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative; /* Necessário para posicionamento absoluto da seta, se fosse fora do top-bar */
+  font-family: Arial, sans-serif; /* Fonte padrão */
+}
+
+.top-bar {
+  background-color: #3f6eb7; /* Cor da barra superior (azul escuro) */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centraliza o título por padrão */
+  padding: 15px 20px; /* Mais padding para os lados */
+  font-size: 18px;
+  font-weight: bold;
+  position: relative; /* Para posicionar a seta dentro dele */
+  height: 60px; /* Altura fixa para a barra */
+  box-sizing: border-box; /* Garante que padding e borda não aumentem a altura */
+}
+
+.top-bar h1 {
+  margin: 0; /* Remove margem padrão do h1 */
+  flex-grow: 1; /* Permite que o título ocupe o espaço restante */
+  text-align: center; /* Garante que o título fique centralizado mesmo com a seta */
+}
+
+/* Estilo da seta de voltar DENTRO da barra superior */
+.voltar {
+  position: absolute; /* Posição absoluta em relação ao top-bar */
+  left: 20px; /* Alinha à esquerda */
+  top: 50%; /* Centraliza verticalmente */
+  transform: translateY(-50%); /* Ajusta para centralização perfeita */
+  
+  color: white; /* Cor branca para a seta */
+  text-decoration: none;
+  font-size: 24px; /* Aumenta um pouco o tamanho */
+  font-weight: bold;
+  border: 2px solid white; /* Borda branca */
+  border-radius: 50%;
+  width: 45px; /* Aumenta um pouco o tamanho */
+  height: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  background-color: transparent; /* Fundo transparente */
+}
+
+.voltar:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Um leve brilho ao passar o mouse */
+}
+
+.avatar {
+  flex: 1; /* Permite que o avatar ocupe o espaço central */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px; /* Adiciona um padding para espaçamento */
+}
+
+.avatar img {
+  width: 200px; /* Tamanho do avatar */
+  max-width: 80%; /* Garante que não ultrapasse a largura da tela em telas menores */
+  image-rendering: pixelated; /* Mantém o aspecto pixelado se for um sprite */
+}
+
+/* Container que agrupa os botões */
+/* Container que agrupa os botões */
+.options-container {
+  display: flex;
+  justify-content: center; /* Centraliza os botões na horizontal */
+  gap: 30px; /* Aumenta o espaçamento entre os botões para 30px */
+  padding: 20px;
+  flex-wrap: wrap;
+}
+
+/* Estilo para os botões individuais */
+.option-button {
+  background-color: #3f6eb7; /* Remove o fundo */
+  background-color: #4b78c0;/* Adiciona uma borda branca */
+  border-radius: 10px; /* Mantém o raio de borda para cantos levemente arredondados */
+  width: 90px;
+  height: 90px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Efeito ao passar o mouse */
+.option-button:hover {
+  background-color: #426bac; /* Fundo branco semi-transparente ao passar o mouse */
+}
+
+/* Estilo para os ícones dentro dos botões */
+.option-button img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  /* Garante que o ícone fique branco, se a imagem original for preta */
+  filter: brightness(0) invert(1);
+}

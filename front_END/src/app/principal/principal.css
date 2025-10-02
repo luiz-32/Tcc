@@ -1,0 +1,152 @@
+/* Fundo azul da página */
+.principal-container {
+  background-color: #2e5ea7; /* azul */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+:host{
+  background-color: #2e5ea7;
+}
+
+/* Barra superior */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+  padding: 10px 20px;
+  border-bottom: 2px solid #ddd;
+}
+
+.top-bar h1 {
+  flex: 1;
+  text-align: center;
+  margin: 0;
+  color: #2e5ea7;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Ícones (busca e engrenagem) */
+.top-bar .icon {
+  font-size: 24px;
+  cursor: pointer;
+  color: #2e5ea7;
+}
+
+/* Grid dos cards */
+.cards-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Cada card */
+.card {
+  background-color: #fff;
+  border-radius: 15px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 10px;
+  position: center;
+  display: flex;
+}
+
+
+.card img {
+  width: 100%;
+  object-fit: cover;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+/* Nome do usuário */
+.card p {
+  margin: 10px 0 0;
+  font-weight: bold;
+  color: #2e5ea7;
+}
+
+/* Botão flutuante de adicionar */
+.fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #fff;
+  color: #2e5ea7;
+  font-size: 32px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+.principal-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* ocupa toda a altura da tela */
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #f9f9f9;
+  color: #1c3c78;
+  font-weight: bold;
+}
+
+/* Centraliza a grade no meio da tela */
+.cards-grid {
+  flex: 1; /* ocupa o espaço restante da tela */
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* duas colunas */
+  gap: 20px;
+  justify-items: center;
+  align-items: center; /* centraliza verticalmente */
+}
+
+/* Estilo dos cards */
+.card {
+  width: 140px;
+  height: 160px;
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+}
+
+/* Botão flutuante */
+.fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: white;
+  color: #1c3c78;
+  font-size: 32px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  cursor: pointer;
+}

@@ -1,0 +1,32 @@
+<div class="login-container">
+  <!-- Seta de voltar -->
+  <a href="inicial" class="seta-voltar">←</a>
+
+  <div class="login-box">
+    <h1>LOGIN</h1>
+
+    <!-- Mensagem de erro -->
+    <p class="mensagem" *ngIf="mensagem">{{ mensagem }}</p>
+
+    <!-- Input de email -->
+    <label for="nome_usuario">NOME DE USUARIO</label>
+    <input
+      type="text"
+      id="nome_usuario"
+      [(ngModel)]="nome_usuario"
+      placeholder="Digite seu nome de Usuario"
+    />
+
+    <!-- Input de senha -->
+    <label for="senha">SENHA:</label>
+    <input
+      type="password"
+      id="senha"
+      [(ngModel)]="senha"
+      placeholder="Digite sua senha"
+    />
+
+    <!-- Botão de login -->
+    <button (click)="fazerLogin()">CONFIRMAR</button>
+  </div>
+</div>
