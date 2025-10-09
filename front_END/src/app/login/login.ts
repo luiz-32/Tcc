@@ -1,9 +1,11 @@
+// src/app/login/login.component.ts (exemplo atualizado)
+
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router } from '@angular/router'; // Importe se não tiver
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../services/auth.service'; // Assuma que você tem
 
 @Component({
   selector: 'app-login',
@@ -19,29 +21,25 @@ export class LoginComponent {
 
   constructor(
     private http: HttpClient,
-    private auth: AuthService,
-    private router: Router
+    private auth: AuthService, // Se usar para login/redirecionamento
+    private router: Router // Necessário para a seta e links
   ) {}
 
   fazerLogin() {
-    // CORRIGIDO: A URL da API deve incluir o caminho '/usuario'
+    // Validações extras no TS (opcional, complementa o HTML)
+    // POST para backend (/login, como no seu código)
     this.http.post<any>('http://localhost:3000/login', {
       nome_usuario: this.nome_usuario,
       senha: this.senha
     }).subscribe({
       next: (res) => {
-        if (res && res.user && res.token) {
-          // salva no localStorage (usuário + token)
-          this.auth.login(res);
-
-          // redireciona para a tela principal
-          this.router.navigate(['/principal']);
-        } else {
-          this.mensagem = 'Credenciais inválidas';
-        }
+        this.auth.login(res); // Salva token e user no localStorage (via AuthService)
+        this.mensagem = ''; // Limpa mensagem de erro anterior
+        this.router.navigate(['/principal']); // Redireciona após sucesso
       },
       error: (err) => {
-        this.mensagem = err.error?.erro || 'Erro ao tentar logar';
+        this.mensagem = err.error?.erro || 'Credenciais inválidas'; // Exibe erro do backend
+        console.error('Erro no login:', err);
       }
     });
   }

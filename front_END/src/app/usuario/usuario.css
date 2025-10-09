@@ -1,5 +1,7 @@
-/* Container da tela */
-.login-container {
+/* src/app/usuario/usuario.css */
+
+/* Container da tela de cadastro (igual ao login-container) */
+.cadastro-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,8 +12,8 @@
   position: relative;
 }
 
-/* Bloco central (login/cadastro) */
-.login-box {
+/* Bloco central do cadastro (igual ao login-box) */
+.cadastro-box {
   padding: 40px;
   display: flex;
   flex-direction: column;
@@ -20,45 +22,40 @@
   text-align: center;
 }
 
-/* Títulos LOGIN / CADASTRO */
-.login-box h1 {
+/* Título CADASTRO (igual ao h1 do login) */
+.cadastro-box h1 {
   font-size: 40px;
   font-weight: bold;
   margin-bottom: 30px;
   color: #3867b4;
 }
 
-/* Mensagem de erro / feedback */
+/* Mensagem de erro ou sucesso (baseado no .mensagem do login) */
 .mensagem {
-  margin-top: 15px;
+  color: red;
+  margin-bottom: 15px;
   font-weight: bold;
-  font-size: 14px;
   text-align: center;
 }
 
-.success {
-  color: #2e7d32;
-}
-.danger {
-  color: #c62828;
-}
-.warning {
-  color: #ed6c02;
-}
-.info {
-  color: #1565c0;
+.mensagem.sucesso {
+  color: #28a745; /* Verde para sucesso (adaptação para o seu TS) */
+  background-color: #d4edda; /* Fundo verde claro opcional */
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
 }
 
-/* Labels */
-.login-box label {
+/* Labels (igual ao login) */
+.cadastro-box label {
   font-weight: bold;
   margin: 10px 0 5px;
   align-self: flex-start;
   color: #3867b4;
 }
 
-/* Inputs */
-.login-box input {
+/* Inputs (igual ao input do login) */
+.cadastro-box input {
   width: 100%;
   padding: 12px;
   border: 2px solid #3867b4;
@@ -66,14 +63,29 @@
   outline: none;
   margin-bottom: 15px;
   transition: border-color 0.3s;
+  box-sizing: border-box;
 }
 
-.login-box input:focus {
+.cadastro-box input:focus {
   border-color: #2e5490;
 }
 
-/* Botões */
-.login-box button {
+.cadastro-box input:invalid {
+  border-color: #dc3545; /* Vermelho para inválido, como adaptação */
+}
+
+/* Mensagens de validação de campo (adaptação para erro-validacao anterior) */
+.erro-validacao {
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  text-align: left;
+  align-self: flex-start;
+}
+
+/* Botão de cadastro (igual ao button do login) */
+.btn-cadastro {
   width: 100%;
   padding: 15px;
   background-color: #3867b4;
@@ -83,18 +95,38 @@
   cursor: pointer;
   font-weight: bold;
   transition: 0.3s;
+  font-size: 16px;
+  margin-top: 10px;
 }
 
-.login-box button:hover {
+.btn-cadastro:hover:not(:disabled) {
   background-color: #2e5490;
 }
 
-.login-box button:disabled {
-  background-color: #a5a5a5;
+.btn-cadastro:disabled {
+  background-color: #6c757d;
   cursor: not-allowed;
 }
 
-/* Seta de voltar */
+/* Link para login (adaptação do link-login anterior, estilizado como texto simples) */
+.link-login {
+  margin-top: 20px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.link-login a {
+  color: #3867b4;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.link-login a:hover {
+  text-decoration: underline;
+  color: #2e5490;
+}
+
+/* Seta de voltar (igual ao seta-voltar do login) */
 .seta-voltar {
   position: absolute;
   top: 25px;
@@ -111,6 +143,7 @@
   justify-content: center;
   align-items: center;
   transition: all 0.3s;
+  cursor: pointer;
 }
 
 .seta-voltar:hover {

@@ -1,51 +1,33 @@
-<!-- src/app/principal/principal.html -->
 <div class="principal-container">
-  <!-- Barra superior -->
+
   <div class="top-bar">
     <span class="icon">🔍</span>
     <h1>COMUNIDADE</h1>
-    
-    <button type="button" class="btn-sobre-nos" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-      <span class="icon">⚙️</span>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      ⚙️
     </button>
-  </div>
 
-  <!-- Modal do Usuário -->
-  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="staticBackdropLabel">Meu Perfil</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Perfil do Usuário</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+        <div class="modal-body">
+  <p><strong>Usuário logado:</strong> {{ usuarioNome || 'Desconhecido' }}</p>
+  <button class="btn btn-outline-danger ms-2" (click)="sair()">Sair</button>
 
-        <div class="modal-body text-center">
-          <!-- Foto do usuário -->
-          <img *ngIf="usuarioLogado?.avatar" [src]="usuarioLogado?.avatar" alt="Avatar do usuário" class="img-fluid rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
-          
-          <!-- Nome do usuário -->
-          <h2 *ngIf="usuarioLogado" class="mt-3">{{ usuarioLogado.nome_usuario }}</h2>
-          <p *ngIf="!usuarioLogado" class="text-muted">Usuário não encontrado.</p>
-        </div>
+</div>
 
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fechar</button>
-          <button type="button" class="btn btn-warning btn-sm" (click)="editarUsuario()">Editar</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Grid de cards (exemplo - você pode expandir para um loop *ngFor se necessário) -->
-  <div class="card" style="width: 18rem;">
-    <img src="..." class="card-img-top" alt="...">
-    <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
-    </div>
-  </div>
-
-  <!-- Botão flutuante -->
-  <div class="fab" (click)="adicionarUsuario()">＋</div>
+  <a href="/personalize">
+    <button class="fab">＋</button>
+  </a>
 </div>

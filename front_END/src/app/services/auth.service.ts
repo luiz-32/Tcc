@@ -1,5 +1,4 @@
 // src/app/services/auth.service.ts
-
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -9,26 +8,35 @@ export class AuthService {
 
   constructor() { }
 
-  // Método que o erro está reclamando
   login(response: any): void {
+    console.log("Resposta do login:", response); // 👀 Veja o que vem do backend
+
     if (response && response.token) {
-      // Salva o token e outras informações no localStorage
       localStorage.setItem('token', response.token);
-      
-      // Você pode salvar outras informações, como o ID do usuário
-      // if (response.user_id) {
-      //   localStorage.setItem('user_id', response.user_id);
-      // }
+
+      // Captura o nome do usuário com segurança
+      const nome =
+        response.nome_usuario ||
+        response.nome ||
+        response.usuario?.nome_usuario ||
+        response.user?.nome_usuario ||
+        response.user?.nome;
+
+      if (nome) {
+        localStorage.setItem('usuarioLogado', nome);
+        console.log("Usuário salvo no localStorage:", nome);
+      } else {
+        console.warn("⚠️ Nenhum nome de usuário encontrado na resposta.");
+      }
     }
   }
 
-  // Seu método estaLogado() já deve existir aqui
   estaLogado(): boolean {
     return !!localStorage.getItem('token');
   }
 
-  // Opcional: método de logout para remover o token
   logout(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('usuarioLogado');
   }
 }

@@ -73,6 +73,7 @@
    // POST /login - AUTENTICAÇÃO (JWT) - SEM HASH POR AGORA
    app.post("/login", (req, res) => {
      const { nome_usuario, senha } = req.body;
+     console.log(nome_usuario, senha)
      if (!nome_usuario || !senha) {
        return res.status(400).json({ erro: "Informe nome de usuário e senha." });
      }

@@ -1,3 +1,5 @@
+/* src/app/login/login.css */
+
 /* Container da tela */
 .login-container {
   display: flex;
@@ -28,12 +30,20 @@
   color: #3867b4;
 }
 
-/* Mensagem de erro */
+/* Mensagem de erro ou sucesso */
 .mensagem {
   color: red;
   margin-bottom: 15px;
   font-weight: bold;
   text-align: center;
+}
+
+.mensagem.sucesso {
+  color: #28a745; /* Verde para sucesso (consistente com cadastro) */
+  background-color: #d4edda; /* Fundo verde claro */
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
 }
 
 /* Labels */
@@ -53,10 +63,25 @@
   outline: none;
   margin-bottom: 15px;
   transition: border-color 0.3s;
+  box-sizing: border-box;
 }
 
 .login-box input:focus {
   border-color: #2e5490;
+}
+
+.login-box input:invalid {
+  border-color: #dc3545; /* Vermelho para inválido */
+}
+
+/* Mensagens de validação de campo (para erros específicos, como no cadastro) */
+.erro-validacao {
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  text-align: left;
+  align-self: flex-start;
 }
 
 /* Botão de login */
@@ -70,10 +95,35 @@
   cursor: pointer;
   font-weight: bold;
   transition: 0.3s;
+  font-size: 16px;
+  margin-top: 10px;
 }
 
-.login-box button:hover {
+.login-box button:hover:not(:disabled) {
   background-color: #2e5490;
+}
+
+.login-box button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+/* Link para registro/cadastro (novo: consistente com link-login do cadastro) */
+.link-registro {
+  margin-top: 20px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.link-registro a {
+  color: #3867b4;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.link-registro a:hover {
+  text-decoration: underline;
+  color: #2e5490;
 }
 
 /* Seta de voltar */
@@ -93,6 +143,7 @@
   justify-content: center;
   align-items: center;
   transition: all 0.3s;
+  cursor: pointer;
 }
 
 .seta-voltar:hover {
