@@ -1,0 +1,33 @@
+<div class="navbar-container">
+  <!-- Linha superior -->
+  <div class="top-row">
+    <div class="logo">
+      <img src="assets/logo.png" alt="ODDISH Logo" class="logo-img" />
+      <span class="logo-text">ODDISH</span>
+    </div>
+
+    <div class="search-bar">
+      <input type="text" placeholder="Pesquisar..." />
+      <span class="search-icon">🔍</span>
+    </div>
+
+    <div class="profile-container">
+      <div class="profile-icon" (click)="toggleMenu()">perfil</div>
+
+      <div class="profile-menu" *ngIf="menuAberto" (click)="$event.stopPropagation()">
+        <h3>USUÁRIO</h3>
+        <a href="#">OPÇÕES</a>
+        <a href="#">ALGUMA</a>
+        <a href="#">COISA</a>
+        <a href="#">AAAAAAA</a>
+        <button class="sair-btn">SAIR</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="menu-row">
+    <a routerLink="/principal" class="menu-item">INÍCIO</a>
+    <a routerLink="/favoritos" class="menu-item">FAVORITOS</a>
+    <a routerLink="/sobre" class="menu-item">SOBRE NÓS</a>
+  </div>
+</div>

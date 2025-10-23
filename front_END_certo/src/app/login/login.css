@@ -1,0 +1,167 @@
+/* src/app/login/login.css */
+
+/* Container da tela */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(135deg, #0a0b3a, #2b1f6a, #3da93d);
+  background-size: 400% 400%;
+  animation: gradientMove 10s ease infinite;
+  font-family: Arial, Helvetica, sans-serif;
+  position: relative;
+}
+
+/* Animação */
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Bloco central do login */
+.login-box {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 350px;
+  text-align: center;
+}
+
+/* Título LOGIN */
+.login-box h1 {
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #ffffff;
+}
+
+/* Mensagem de erro ou sucesso */
+.mensagem {
+  color: red;
+  margin-bottom: 15px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.mensagem.sucesso {
+  color: #28a745; /* Verde para sucesso (consistente com cadastro) */
+  background-color: #d4edda; /* Fundo verde claro */
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+/* Labels */
+.login-box label {
+  font-weight: bold;
+  margin: 10px 0 5px;
+  align-self: flex-start;
+  color: #ffffff;
+}
+
+/* Inputs */
+.login-box input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #3867b4;
+  border-radius: 10px;
+  outline: none;
+  margin-bottom: 15px;
+  transition: border-color 0.3s;
+  box-sizing: border-box;
+}
+
+.login-box input:focus {
+  border-color: #2e5490;
+}
+
+.login-box input:invalid {
+  border-color: #c10101; /* Vermelho para inválido */
+}
+
+/* Mensagens de validação de campo (para erros específicos, como no cadastro) */
+.erro-validacao {
+  color: #c10101;
+  font-size: 12px;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  text-align: left;
+  align-self: flex-start;
+}
+
+/* Botão de login */
+.login-box button {
+  width: 100%;
+  padding: 15px;
+  background-color: #0a2ba2;
+  color: white;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.login-box button:hover:not(:disabled) {
+  background-color: #011d85;
+}
+
+.login-box button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+/* Link para registro/cadastro (novo: consistente com link-login do cadastro) */
+.link-registro {
+  margin-top: 20px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.link-registro a {
+  color: #3867b4;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.link-registro a:hover {
+  text-decoration: underline;
+  color: #2e5490;
+}
+
+/* Seta de voltar */
+.seta-voltar {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  color: #3867b4;
+  text-decoration: none;
+  font-size: 22px;
+  font-weight: bold;
+  border: 2px solid #3867b4;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.seta-voltar:hover {
+  background-color: #3867b4;
+  color: white;
+}

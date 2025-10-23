@@ -1,0 +1,51 @@
+<!-- src/app/usuario/usuario.html (versão ajustada para o novo CSS) -->
+<div class="cadastro-container">
+  <!-- Seta de voltar (opcional: redireciona para login) -->
+  <a class="seta-voltar" href="/inicial">&larr;</a>
+  
+  <div class="cadastro-box">
+    <h1>CADASTRO</h1> <!-- Ou "Cadastro de Usuário" se preferir -->
+    
+    <form (ngSubmit)="fazerCadastro()" #cadastroForm="ngForm">
+      <div class="form-group"> <!-- Mantive para agrupar, mas o CSS agora estiliza via .cadastro-box -->
+        <label for="nome_usuario">Nome de Usuário:</label>
+        <input 
+          type="text" 
+          id="nome_usuario" 
+          name="nome_usuario" 
+          [(ngModel)]="nome_usuario" 
+          required 
+          minlength="3"
+          placeholder="Digite um nome de usuário (mín. 3 caracteres)"
+        >
+        <div *ngIf="cadastroForm.controls['nome_usuario']?.invalid && cadastroForm.controls['nome_usuario']?.touched" class="erro-validacao">
+          Nome de usuário deve ter pelo menos 3 caracteres.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="senha">Senha:</label>
+        <input 
+          type="password" 
+          id="senha" 
+          name="senha" 
+          [(ngModel)]="senha" 
+          required 
+          minlength="6"
+          placeholder="Digite uma senha (mín. 4 caracteres)"
+        >
+      </div>
+
+      <button 
+        type="submit" 
+        class="btn-cadastro" 
+      >
+        Cadastrar
+      </button>
+    </form>
+
+    <!-- Exibe mensagem de erro ou sucesso (agora com classe 'sucesso' para verde) -->
+    <div *ngIf="mensagem" class="mensagem" [ngClass]="{'sucesso': mensagem.toLowerCase().includes('sucesso') || mensagem.toLowerCase().includes('realizado')}">
+      {{ mensagem }}
+    </div>
+</div>

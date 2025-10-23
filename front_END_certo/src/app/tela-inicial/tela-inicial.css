@@ -1,0 +1,137 @@
+/* home.component.css */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  background: linear-gradient(135deg, #0a0b3a, #2b1f6a, #3da93d);
+  background-size: 400% 400%;
+  animation: gradientMove 10s ease infinite;
+}
+
+/* Animação fundo da tela*/
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Link "SOBRE NÓS" */
+.sobre-nos {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  color: #3867b4;
+  text-decoration: none;
+  font-weight: bold;
+  z-index: 1001; /* Garante que o link "SOBRE NÓS" sempre fique por cima */
+}
+
+/* Estilos do conteúdo principal */
+.conteudo-principal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 25px; /* ajuste aqui o espaço vertical (padrão era 60px) */
+}
+
+
+/* Botões de navegação */
+.botoes {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  align-items: center;
+}
+
+.cadastro-container{
+  text-align: center;
+  padding-top: 2px;
+}
+
+.href-cadastro{
+  color: #ffff;
+  text-decoration:none ;  
+}
+.href-cadastro:hover{
+  color: #adbfff;
+  text-decoration: underline;
+}
+
+
+.btn {
+  width: 250px;
+  padding: 15px;
+  background-color: #0a2ba2;
+  color: white;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn:hover {
+  background-color: #001972;
+  color: #adbfff;
+}
+
+
+/* Estilo para o bloco de texto */
+/* Botão "SOBRE NÓS" fixo no canto superior direito */
+.btn-sobre-nos {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 6px 12px;       /* menor */
+  font-size: 14px;         /* texto reduzido */
+  background-color: transparent; 
+  color: #ffff;   
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-sobre-nos:hover {
+  color: #adbfff;          /* azul mais escuro ao passar o mouse */
+  text-decoration: underline;
+}
+
+/* Botões dentro do modal */
+.modal-footer .btn {
+  padding: 6px 12px;       /* reduz tamanho */
+  font-size: 14px;
+  border-radius: 8px;
+  flex-direction: row;
+}
+/* Deixa os botões do modal lado a lado */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end; /* alinha à direita (padrão Bootstrap) */
+  gap: 10px; /* espaço entre eles */
+}
+
+.modal-footer .btn {
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 8px;
+}
+
+.logo-principal {
+  width: 300px;
+  height: auto;
+  justify-content: center;
+  object-fit: contain;
+  margin-bottom: 0; /* remove margens extras */
+}
+
