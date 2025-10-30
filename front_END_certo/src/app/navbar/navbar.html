@@ -1,33 +1,60 @@
-<div class="navbar-container">
-  <!-- Linha superior -->
-  <div class="top-row">
-    <div class="logo">
-      <img src="assets/logo.png" alt="ODDISH Logo" class="logo-img" />
-      <span class="logo-text">ODDISH</span>
+<nav class="navbar navbar-expand-lg"
+  style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    height: 100px;
+    background-color: #66ea54;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  ">
+
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+    
+    <!-- 🟢 Logo -->
+    <img src="foto/logo.png" alt="Logo" class="logo">
+
+    <!-- 🔵 Campo de busca -->
+    <form class="d-flex mx-auto"
+          style="width: 50%; max-width: 400px;"
+          (submit)="onSubmit($event)">
+      
+      <input class="form-control me-2"
+             type="search"
+             placeholder="Pesquisar alimento..."
+             aria-label="Search"
+             [(ngModel)]="termo"
+             name="searchTerm">
+
+      <button type="submit" class="btn btn-dark">Buscar</button>
+    </form>
+
+    <!-- 🔴 Perfil -->
+    <div class="dropdown me-3">
+      <a href="#" 
+         class="d-flex align-items-center text-decoration-none dropdown-toggle"
+         id="profileDropdown"
+         data-bs-toggle="dropdown"
+         aria-expanded="false">
+        <img 
+          src="foto/perfil.png"
+          alt="Perfil"
+          width="45" height="45"
+          class="rounded-circle border border-dark" />
+      </a>
+
+      <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="profileDropdown">
+        <li>
+          <span class="dropdown-item-text fw-bold text-center">
+            👋 {{ usuarioNome || 'Desconhecido' }}
+          </span>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="#">Configurações</a></li>
+        <li><a class="dropdown-item text-danger" (click)="sair()">🚪 Sair</a></li>
+      </ul>
     </div>
 
-    <div class="search-bar">
-      <input type="text" placeholder="Pesquisar..." />
-      <span class="search-icon">🔍</span>
-    </div>
-
-    <div class="profile-container">
-      <div class="profile-icon" (click)="toggleMenu()">perfil</div>
-
-      <div class="profile-menu" *ngIf="menuAberto" (click)="$event.stopPropagation()">
-        <h3>USUÁRIO</h3>
-        <a href="#">OPÇÕES</a>
-        <a href="#">ALGUMA</a>
-        <a href="#">COISA</a>
-        <a href="#">AAAAAAA</a>
-        <button class="sair-btn">SAIR</button>
-      </div>
-    </div>
   </div>
-
-  <div class="menu-row">
-    <a routerLink="/principal" class="menu-item">INÍCIO</a>
-    <a routerLink="/favoritos" class="menu-item">FAVORITOS</a>
-    <a routerLink="/sobre" class="menu-item">SOBRE NÓS</a>
-  </div>
-</div>
+</nav>

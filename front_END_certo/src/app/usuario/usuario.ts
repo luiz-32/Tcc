@@ -23,6 +23,13 @@ export class UsuarioComponent {
     private auth: AuthService // ⬅️ Injetando o AuthService
   ) {}
 
+  ngOnInit(){
+    console.log("Funcionando");
+    if(this.auth.estaLogado()){
+      this.router.navigate(['/principal']);
+    }
+  }
+
   fazerCadastro() {
     if (!this.nome_usuario || !this.senha) {
       this.mensagem = 'Preencha todos os campos!';

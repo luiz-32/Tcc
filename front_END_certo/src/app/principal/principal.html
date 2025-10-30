@@ -1,46 +1,48 @@
 <div class="principal-container">
-  <!-- NAVBAR -->
-<app-navbar></app-navbar>
-  <!-- Título -->
-  <div class="titulo-container">
-    <h1>SEU JEITO DE SE ALIMENTAR!</h1>
-  </div>
+  <app-navbar 
+    [usuarioNome]="usuarioNome" 
+    (sairEvent)="sair()"
+    >
+  </app-navbar>
 
-  <!-- Categorias -->
-  <div class="categorias-container">
-    <div class="categoria-card">
-      <h2>VEGANO</h2>
-      <img src="assets/vegano.png" alt="Vegano" />
-    </div>
-
-    <div class="categoria-card">
-      <h2>VEGETARIANO</h2>
-      <img src="assets/vegetariano.png" alt="Vegetariano" />
-    </div>
-
-    <div class="categoria-card">
-      <h2>LACTOVEGETARIANO</h2>
-      <img src="assets/lactovegetariano.png" alt="Lactovegetariano" />
-    </div>
-
-    <div class="categoria-card">
-      <h2>VEGANO</h2>
-      <img src="assets/vegano.png" alt="Vegano" />
-    </div>
-
-    <div class="categoria-card">
-      <h2>VEGETARIANO</h2>
-      <img src="assets/vegetariano.png" alt="Vegetariano" />
-    </div>
-
-    <div class="categoria-card">
-      <h2>LACTOVEGETARIANO</h2>
-      <img src="assets/lactovegetariano.png" alt="Lactovegetariano" />
+  <!-- Tela de escolha de dieta -->
+  <div *ngIf="!tipoDieta" class="dieta-container">
+    <h1>ESCOLHA SUA DIETA</h1>
+    <div class="dietas">
+      <button class="dieta-card" (click)="mudarDieta('VEGANO')">🌿 VEGANO</button>
+      <button class="dieta-card" (click)="mudarDieta('VEGETARIANO')">🥗 VEGETARIANO</button>
+      <button class="dieta-card" (click)="mudarDieta('OVOLACTO')">🥚 OVOLACTOVEGETARIANO</button>
+      <button class="dieta-card" (click)="mudarDieta('INTOLERANTE_LACTOSE')">🥛 INTOLERANTE À LACTOSE</button>
     </div>
   </div>
 
-  <!-- Botão Flutuante -->
-  <a href="/personalize">
-    <button class="fab">＋</button>
-  </a>
+  <!-- Tela da dieta selecionada -->
+  <div *ngIf="tipoDieta" class="alimentos-container">
+    <div class="header">
+      <h1>{{ tipoDieta.toUpperCase() }}</h1>
+      <button class="voltar" (click)="voltar()">⬅ Voltar</button>
+    </div>
+
+    <div class="lista">
+      <div class="alimento-item" *ngFor="let alimento of alimentosRecomendados">
+        <img [src]="'http://localhost:3000/' + alimento.imagem" alt="{{ alimento.nome }}" class="fotoalimento"/>
+        <span>{{ alimento.nome }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔍 Resultados da pesquisa -->
+  <!--<div *ngIf="modoPesquisa" class="alimentos-container">
+    <div class="header">
+      <h1>RESULTADOS DA PESQUISA</h1>
+      <button class="voltar" (click)="sairPesquisa()">⬅ Voltar</button>
+    </div>
+
+    <div class="lista">
+      <div class="alimento-item" *ngFor="let alimento of resultadosPesquisa">
+        <img [src]="'http://localhost:3000/' + alimento.imagem" alt="{{ alimento.nome }}" class="fotoalimento"/>
+        <span>{{ alimento.nome }}</span>
+      </div>
+    </div>
+  </div>-->
 </div>

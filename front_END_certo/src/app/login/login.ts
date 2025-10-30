@@ -20,8 +20,16 @@ export class LoginComponent {
   constructor(
     private http: HttpClient,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+  
   ) {}
+
+  ngOnInit(){
+    console.log("Funcionando");
+    if(this.auth.estaLogado()){
+      this.router.navigate(['/principal']);
+    }
+  }
 
   fazerLogin() {
     this.http.post<any>('http://localhost:3000/login', {

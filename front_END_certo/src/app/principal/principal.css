@@ -1,196 +1,120 @@
-/* ======= CONTAINER GERAL ======= */
 .principal-container {
-  background: linear-gradient(135deg, #dbe9f4, #f5e3c3, #e2f1e6, #d2c4f0);
-  background-size: 400% 400%;
-  animation: gradientMove 10s ease infinite;
+  background: linear-gradient(180deg, #e8ffb8, #b9ffa8);
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-family: "Poppins", sans-serif;
-  overflow-y: auto;
-  padding-bottom: 80px;
+  padding: 20px;
+  color: #0b2185;
+  font-family: Arial, sans-serif;
+  margin-top:80px ;
 }
 
-/* Animação do degradê */
-@keyframes gradientMove {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-/* ======= NAVBAR ======= */
-.navbar-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  background-color: #4cd64c; /* Verde principal */
-  color: #fff;
-  font-family: 'Poppins', sans-serif;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-}
-
-/* Linha superior (logo, busca, perfil) */
-.top-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 25px;
-}
-
-/* Logo */
-
-
-.foto {
-width: 300px;
-height: 200px;
-padding: 0%;
-margin: 0%;
-}
-
-
-
-/* Barra de busca */
-.search-bar {
-  display: flex;
-  align-items: center;
-  background-color: #ffffff;
-  border-radius: 30px;
-  padding: 5px 12px;
-  width: 280px;
-  position: relative;
-}
-
-.search-bar input {
-  border: none;
-  outline: none;
-  width: 100%;
-  font-size: 0.95rem;
-  color: #333;
-  border-radius: 30px;
-}
-
-.search-icon {
-  color: #444;
-  margin-left: 5px;
-}
-
-/* Ícone de perfil */
-.profile-icon {
-  font-size: 2rem;
-  color: #2f2f2f;
-  background-color: #9ef0a3;
-  border-radius: 50%;
-  width: 45px;
-  height: 45px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.profile-icon:hover {
-  transform: scale(1.05);
-}
-
-/* Linha inferior (menu) */
-.menu-row {
-  display: flex;
-  justify-content: center;
-  background: linear-gradient(90deg, #1e5f22 0%, #5ec65b 50%, #1e5f22 100%);
-  padding: 8px 0;
-  border-top: 2px solid rgba(255, 255, 255, 0.2);
-}
-
-.menu-item {
-  margin: 0 40px;
-  text-decoration: none;
-  color: #ffffff;
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: opacity 0.2s ease;
-}
-
-.menu-item:hover {
-  opacity: 0.8;
-}
-
-/* ======= TÍTULO ======= */
-.titulo-container {
-  width: 100%;
-  color: white;
+/* Dietas iniciais */
+.dieta-container {
   text-align: center;
-  font-weight: bold;
-  font-size: 1.6rem;
-  margin-top: 25px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* ======= CATEGORIAS ======= */
-.categorias-container {
+.dietas {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 30px;
-  margin-top: 30px;
-  padding: 0 20px;
+  gap: 20px;
 }
 
-.categoria-card {
-  background-color: #6af267;
-  border-radius: 20px;
-  width: 200px;
-  height: 200px;
+.dieta-card {
+  background-color: #45d25c;
+  border-radius: 15px;
+  width: 180px;
+  height: 150px;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  transition: transform 0.2s ease, background-color 0.3s ease;
-}
-
-.categoria-card:hover {
-  transform: scale(1.05);
-  background-color: #73ff6a;
-}
-
-.categoria-card h2 {
-  font-size: 1.1rem;
+  align-items: center;
+  cursor: pointer;
+  color: #0b2185;
   font-weight: bold;
-  color: #083b0f;
-  margin-bottom: 10px;
-  text-transform: uppercase;
+  transition: 0.2s;
 }
 
-.categoria-card img {
-  width: 90px;
+.dieta-card:hover {
+  transform: scale(1.05);
+  background-color: #5aed71;
+}
+
+.dieta-card img {
+  width: 70px;
+  margin-top: 10px;
+}
+
+/* Lista de alimentos */
+.alimentos-container {
+  padding: 20px 60px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lista {
+  margin-top: 20px;
+  justify-content: center;
+  width: 50px;
   height: auto;
 }
 
-/* ======= BOTÃO FLUTUANTE ======= */
-.fab {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  background-color: #67a673;
-  color: #fff;
-  font-size: 2rem;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  border: none;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+.alimento-item {
+  display: flex;
+  border-radius: 15px;
+  background-color: #45d25c;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
   cursor: pointer;
-  transition: background-color 0.3s;
+  font-weight: bold;
 }
 
-.fab:hover {
-  background-color: #5b9567;
+.alimento-item:hover {
+  color: #45d25c;
+}
+
+/* Detalhe do alimento */
+.detalhe-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.detalhe-card {
+  background-color: #0b2185;
+  color: white;
+  border-radius: 12px;
+  padding: 30px;
+  width: 400px;
+  text-align: center;
+}
+
+.detalhe-card img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.voltar {
+  background-color: #45d25c;
+  color: #0b2185;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.voltar:hover {
+  background-color: #5aed71;
+}
+.fotoalimento{
+  width: 300px;
+  height: 250px;
 }

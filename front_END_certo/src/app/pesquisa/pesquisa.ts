@@ -6,10 +6,10 @@ import { CommonModule } from '@angular/common';
   selector: 'app-personalize',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './personalize.html',
-  styleUrls: ['./personalize.css'],
+  templateUrl: './pesquisa.html',
+  styleUrls: ['./pesquisa.css'],
 })
-export class PersonalizeComponent {
+export class PesquisarComponent {
   constructor(private router: Router) {}  // <-- injetar aqui
 
   voltar() {

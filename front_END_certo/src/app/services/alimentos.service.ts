@@ -9,7 +9,7 @@ export interface Alimento {
   intolerante_lactose: boolean;
   vegetariano: boolean;
   vegano: boolean;
-  ovolactovegetariano: boolean;
+  ovolacto: boolean;
   imagem: string;
 }
 
@@ -25,4 +25,10 @@ export class AlimentosService {
   getAlimentos(): Observable<Alimento[]> {
     return this.http.get<Alimento[]>(this.apiUrl);
   }
+  // dentro de AlimentosService
+// dentro de AlimentosService
+// dentro de AlimentosService
+
+
+
 }

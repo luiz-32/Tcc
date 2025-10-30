@@ -1,23 +1,29 @@
-
-import { Component, HostListener } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-navbar',
+  standalone: true,
   templateUrl: './navbar.html',
-  styleUrls: ['./navbar.css']
+  styleUrls: ['./navbar.css'],
+  imports: [CommonModule, FormsModule]
 })
 export class Navbar {
-  menuAberto = false;
+  @Input() usuarioNome: string | null = null;
+  @Output() sairEvent = new EventEmitter<void>();
+  @Output() search = new EventEmitter<string>();
 
-  toggleMenu() {
-    this.menuAberto = !this.menuAberto;
+  termo: string = '';
+
+  onSubmit(event: Event) {
+    event.preventDefault();
+    if (this.termo.trim() !== '') {
+      this.search.emit(this.termo.trim());
+    }
   }
 
-  @HostListener('document:click', ['$event'])
-  fecharMenuFora(event: Event) {
-    const target = event.target as HTMLElement;
-    if (!target.closest('.profile-container')) {
-      this.menuAberto = false;
-    }
+  sair() {
+    this.sairEvent.emit();
   }
 }
