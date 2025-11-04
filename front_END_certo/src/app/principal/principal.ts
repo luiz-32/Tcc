@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { Navbar } from '../navbar/navbar';
 import { AuthService } from '../services/auth.service';
 import { AlimentosService, Alimento } from '../services/alimentos.service';
@@ -14,10 +14,17 @@ import { AlimentosService, Alimento } from '../services/alimentos.service';
   imports: [CommonModule, HttpClientModule, Navbar]
 })
 export class PrincipalComponent implements OnInit {
+  @ViewChild(Navbar) navbar!: Navbar;
+
   usuarioNome: string | null = null;
   alimentosRecomendados: Alimento[] = [];
-  tipoDieta: string | null = null; // null = tela inicial
   todosAlimentos: Alimento[] = [];
+
+  tipoDieta: string | null = null;
+
+  modoPesquisa = false;
+  resultadosPesquisa: Alimento[] = [];
+  mensagemAviso: string = "";
 
   constructor(
     private auth: AuthService,
@@ -31,21 +38,21 @@ export class PrincipalComponent implements OnInit {
   }
 
   carregarAlimentos(): void {
-    this.alimentosService.getAlimentos().subscribe(
-      (alimentos: Alimento[]) => {
+    this.alimentosService.getAlimentos().subscribe({
+      next: alimentos => {
         this.todosAlimentos = alimentos;
-        this.alimentosRecomendados = alimentos.slice(0, 6); // Recomendação inicial
+        this.alimentosRecomendados = alimentos.slice(0, 6);
       },
-      (erro: HttpErrorResponse) => {
-        console.error('Erro ao carregar alimentos:', erro);
-      }
-    );
+      error: erro => console.error("Erro ao carregar alimentos", erro)
+    });
   }
 
-  mudarDieta(tipo: string): void {
-    this.tipoDieta = tipo;
-    this.filtrarAlimentosPorDieta();
-  }
+ mudarDieta(tipo: string): void {
+  this.tipoDieta = tipo;
+  this.filtrarAlimentosPorDieta();
+}
+
+
 
   filtrarAlimentosPorDieta(): void {
     if (!this.tipoDieta) return;
@@ -57,24 +64,53 @@ export class PrincipalComponent implements OnInit {
       case 'VEGETARIANO':
         this.alimentosRecomendados = this.todosAlimentos.filter(a => a.vegetariano);
         break;
-      case 'OVOLACTO':
+      case 'OVOLACTOVEGETARIANO':
         this.alimentosRecomendados = this.todosAlimentos.filter(a => a.ovolacto);
         break;
       case 'INTOLERANTE_LACTOSE':
         this.alimentosRecomendados = this.todosAlimentos.filter(a => a.intolerante_lactose);
         break;
-      default:
-        this.alimentosRecomendados = this.todosAlimentos;
+      case 'INTOLERANTE_GLUTEN':
+        this.alimentosRecomendados = this.todosAlimentos.filter(a => a.intolerante_gluten);
+        break;
     }
   }
 
-  voltar(): void {
-    this.tipoDieta = null; // volta para a tela de escolha de dieta
+  pesquisarAlimentos(termo: string) {
+    this.modoPesquisa = true;
+    this.tipoDieta = null;
+
+    const termoLower = termo.toLowerCase();
+
+    this.resultadosPesquisa = this.todosAlimentos.filter(a =>
+      a.nome.toLowerCase().includes(termoLower)
+    );
+
+    this.mensagemAviso =
+      this.resultadosPesquisa.length === 0
+        ? "Nenhum alimento encontrado."
+        : "";
   }
+
+  sairPesquisa() {
+    this.modoPesquisa = false;
+    this.resultadosPesquisa = [];
+    this.mensagemAviso = "";
+
+    this.navbar.termo = "";
+  }
+
+ voltar(): void {
+  this.tipoDieta = null;
+  this.modoPesquisa = false;
+  this.resultadosPesquisa = [];
+  this.alimentosRecomendados = this.todosAlimentos.slice(0, 6);
+}
 
 
   sair(): void {
     this.auth.logout();
     this.router.navigate(['/inicial']);
   }
+  
 }

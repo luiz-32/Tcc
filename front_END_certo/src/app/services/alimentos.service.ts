@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-// Definindo o modelo de alimento (ajuste conforme sua estrutura de dados)
+// Modelo principal do alimento
 export interface Alimento {
   id: number;
   nome: string;
@@ -10,25 +10,33 @@ export interface Alimento {
   vegetariano: boolean;
   vegano: boolean;
   ovolacto: boolean;
+  intolerante_gluten: boolean;
   imagem: string;
+}
+
+// Modelo para descrição (tabela "descricao")
+export interface DescricaoAlimento {
+  id: number;
+  descricao: string;
+  beneficios?: string;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class AlimentosService {
-  private apiUrl = 'http://localhost:3000/alimentos'; // URL da sua API
+  private apiUrl = 'http://localhost:3000/alimentos';
+  private descricaoUrl = 'http://localhost:3000/descricao'; // rota para descrição
 
   constructor(private http: HttpClient) {}
 
-  // Método GET para buscar todos os alimentos
+  // Busca todos os alimentos
   getAlimentos(): Observable<Alimento[]> {
     return this.http.get<Alimento[]>(this.apiUrl);
   }
-  // dentro de AlimentosService
-// dentro de AlimentosService
-// dentro de AlimentosService
 
-
-
+  // Busca descrição pelo ID do alimento
+  getDescricaoPorId(id: number): Observable<DescricaoAlimento> {
+    return this.http.get<DescricaoAlimento>(`${this.descricaoUrl}/${id}`);
+  }
 }

@@ -1,23 +1,40 @@
 <div class="principal-container">
+
   <app-navbar 
-    [usuarioNome]="usuarioNome" 
+    [usuarioNome]="usuarioNome"
     (sairEvent)="sair()"
-    >
+    (search)="pesquisarAlimentos($event)">
   </app-navbar>
 
-  <!-- Tela de escolha de dieta -->
-  <div *ngIf="!tipoDieta" class="dieta-container">
-    <h1>ESCOLHA SUA DIETA</h1>
+  <!-- TELA DE DIETAS -->
+  <div *ngIf="!tipoDieta && !modoPesquisa" class="dieta-container">
+    <h1 style="margin-top: 100px;">DIETAS</h1>
     <div class="dietas">
-      <button class="dieta-card" (click)="mudarDieta('VEGANO')">🌿 VEGANO</button>
-      <button class="dieta-card" (click)="mudarDieta('VEGETARIANO')">🥗 VEGETARIANO</button>
-      <button class="dieta-card" (click)="mudarDieta('OVOLACTO')">🥚 OVOLACTOVEGETARIANO</button>
-      <button class="dieta-card" (click)="mudarDieta('INTOLERANTE_LACTOSE')">🥛 INTOLERANTE À LACTOSE</button>
+      <button class="dieta-card" (click)="mudarDieta('VEGANO')">
+        <img src="foto/vegano.jpg" class="fotodieta">
+        <span>VEGANA</span>
+      </button>
+      <button class="dieta-card" (click)="mudarDieta('VEGETARIANO')">
+        <img src="foto/vegetariano.jpg" class="fotodieta">
+        <span>VEGETARIANA</span>
+      </button>
+      <button class="dieta-card" (click)="mudarDieta('INTOLERANTE_LACTOSE')">
+        <img src="foto/intolerante.jpg" class="fotodieta">
+        <span>INTOLERANTE A LACTOSE</span>
+      </button>
+      <button class="dieta-card" (click)="mudarDieta('OVOLACTOVEGETARIANO')">
+        <img src="foto/ovolacto.jpg" class="fotodieta">
+        <span>OVOLACTOVEGETARIANO</span>
+      </button>
+      <button class="dieta-card" (click)="mudarDieta('INTOLERANTE_GLUTEN')">
+        <img src="foto/gluten.jpg" class="fotodieta">
+        <span>INTOLERANTE A GLÚTEN</span>
+      </button>
     </div>
   </div>
 
-  <!-- Tela da dieta selecionada -->
-  <div *ngIf="tipoDieta" class="alimentos-container">
+  <!-- TELA DA DIETA -->
+  <div *ngIf="tipoDieta && !modoPesquisa" class="alimentos-container">
     <div class="header">
       <h1>{{ tipoDieta.toUpperCase() }}</h1>
       <button class="voltar" (click)="voltar()">⬅ Voltar</button>
@@ -31,18 +48,4 @@
     </div>
   </div>
 
-  <!-- 🔍 Resultados da pesquisa -->
-  <!--<div *ngIf="modoPesquisa" class="alimentos-container">
-    <div class="header">
-      <h1>RESULTADOS DA PESQUISA</h1>
-      <button class="voltar" (click)="sairPesquisa()">⬅ Voltar</button>
-    </div>
-
-    <div class="lista">
-      <div class="alimento-item" *ngFor="let alimento of resultadosPesquisa">
-        <img [src]="'http://localhost:3000/' + alimento.imagem" alt="{{ alimento.nome }}" class="fotoalimento"/>
-        <span>{{ alimento.nome }}</span>
-      </div>
-    </div>
-  </div>-->
 </div>
