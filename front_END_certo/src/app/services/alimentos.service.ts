@@ -12,6 +12,7 @@ export interface Alimento {
   ovolacto: boolean;
   intolerante_gluten: boolean;
   imagem: string;
+  descricao: string;
 }
 
 // Modelo para descrição (tabela "descricao")

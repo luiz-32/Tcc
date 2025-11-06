@@ -17,14 +17,16 @@ export class PrincipalComponent implements OnInit {
   @ViewChild(Navbar) navbar!: Navbar;
 
   usuarioNome: string | null = null;
-  alimentosRecomendados: Alimento[] = [];
+
   todosAlimentos: Alimento[] = [];
+  alimentosRecomendados: Alimento[] = [];
+
+  resultadosPesquisa: Alimento[] = [];
+  modoPesquisa = false;
 
   tipoDieta: string | null = null;
 
-  modoPesquisa = false;
-  resultadosPesquisa: Alimento[] = [];
-  mensagemAviso: string = "";
+  alimentoSelecionado: Alimento | null = null;
 
   constructor(
     private auth: AuthService,
@@ -47,17 +49,11 @@ export class PrincipalComponent implements OnInit {
     });
   }
 
- mudarDieta(tipo: string): void {
-  this.tipoDieta = tipo;
-  this.filtrarAlimentosPorDieta();
-}
+  mudarDieta(tipo: string): void {
+    this.tipoDieta = tipo;
+    this.modoPesquisa = false;
 
-
-
-  filtrarAlimentosPorDieta(): void {
-    if (!this.tipoDieta) return;
-
-    switch (this.tipoDieta.toUpperCase()) {
+    switch (tipo) {
       case 'VEGANO':
         this.alimentosRecomendados = this.todosAlimentos.filter(a => a.vegano);
         break;
@@ -67,50 +63,54 @@ export class PrincipalComponent implements OnInit {
       case 'OVOLACTOVEGETARIANO':
         this.alimentosRecomendados = this.todosAlimentos.filter(a => a.ovolacto);
         break;
-      case 'INTOLERANTE_LACTOSE':
+      case 'INTOLERANTE Á LACTOSE':
         this.alimentosRecomendados = this.todosAlimentos.filter(a => a.intolerante_lactose);
         break;
-      case 'INTOLERANTE_GLUTEN':
+      case 'INTOLERANTE Á GLUTEN':
         this.alimentosRecomendados = this.todosAlimentos.filter(a => a.intolerante_gluten);
         break;
     }
   }
 
   pesquisarAlimentos(termo: string) {
+    termo = termo.trim().toLowerCase();
+
+    if (termo === "") {
+      this.resultadosPesquisa = [];
+      this.modoPesquisa = false;
+      return;
+    }
+
     this.modoPesquisa = true;
     this.tipoDieta = null;
 
-    const termoLower = termo.toLowerCase();
-
     this.resultadosPesquisa = this.todosAlimentos.filter(a =>
-      a.nome.toLowerCase().includes(termoLower)
+      a.nome.toLowerCase().includes(termo)
     );
-
-    this.mensagemAviso =
-      this.resultadosPesquisa.length === 0
-        ? "Nenhum alimento encontrado."
-        : "";
   }
 
   sairPesquisa() {
-    this.modoPesquisa = false;
     this.resultadosPesquisa = [];
-    this.mensagemAviso = "";
-
+    this.modoPesquisa = false;
     this.navbar.termo = "";
   }
 
- voltar(): void {
-  this.tipoDieta = null;
-  this.modoPesquisa = false;
-  this.resultadosPesquisa = [];
-  this.alimentosRecomendados = this.todosAlimentos.slice(0, 6);
-}
+  voltar() {
+    this.tipoDieta = null;
+    this.modoPesquisa = false;
+    this.alimentosRecomendados = this.todosAlimentos.slice(0, 6);
+  }
 
+  abrirModal(alimento: Alimento) {
+    this.alimentoSelecionado = alimento;
+  }
+
+  fecharModal() {
+    this.alimentoSelecionado = null;
+  }
 
   sair(): void {
     this.auth.logout();
     this.router.navigate(['/inicial']);
   }
-  
 }

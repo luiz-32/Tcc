@@ -1,17 +1,32 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
+import { PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  constructor() {}
-  
+
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+
+  private isBrowser(): boolean {
+    return isPlatformBrowser(this.platformId);
+  }
 
   login(response: any): void {
+    if (!this.isBrowser()) return;
+
     console.log("Resposta do login:", response);
+    
     if (response && response.token) {
       localStorage.setItem('token', response.token);
-      const nome = response.nome_usuario || response.nome || response.usuario?.nome_usuario || response.user?.nome_usuario || response.user?.nome;
+
+      const nome = response.nome_usuario ||
+                    response.nome ||
+                    response.usuario?.nome_usuario ||
+                    response.user?.nome_usuario ||
+                    response.user?.nome;
+
       if (nome) {
         localStorage.setItem('usuarioLogado', nome);
         console.log("Usuário salvo no localStorage:", nome);
@@ -22,19 +37,22 @@ export class AuthService {
   }
 
   estaLogado(): boolean {
+    if (!this.isBrowser()) return false;
     return !!localStorage.getItem('token');
   }
 
   logout(): void {
+    if (!this.isBrowser()) return;
     localStorage.removeItem('token');
     localStorage.removeItem('usuarioLogado');
   }
 
   deleteUser(password: string): Promise<boolean> {
-    console.log('Executando deleteUser com password:', password);  // Log para depuração
+    if (!this.isBrowser()) return Promise.resolve(false);
+    
     return new Promise((resolve) => {
       setTimeout(() => {
-        const success = Math.random() > 0.5;  // Simulação de sucesso
+        const success = Math.random() > 0.5;
         if (success) {
           localStorage.removeItem('token');
           localStorage.removeItem('usuarioLogado');
@@ -45,7 +63,8 @@ export class AuthService {
   }
 
   changeUsername(newUsername: string): Promise<boolean> {
-    console.log('Executando changeUsername com newUsername:', newUsername);
+    if (!this.isBrowser()) return Promise.resolve(false);
+
     return new Promise((resolve) => {
       setTimeout(() => {
         const success = Math.random() > 0.5;
@@ -58,12 +77,9 @@ export class AuthService {
   }
 
   changePassword(oldPassword: string, newPassword: string): Promise<boolean> {
-    console.log('Executando changePassword com oldPassword:', oldPassword, 'e newPassword:', newPassword);
+    console.log('Executando changePassword');
     return new Promise((resolve) => {
-      setTimeout(() => {
-        const success = Math.random() > 0.5;
-        resolve(success);
-      }, 1000);
+      setTimeout(() => resolve(Math.random() > 0.5), 1000);
     });
   }
 }

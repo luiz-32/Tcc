@@ -4,24 +4,32 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  width: 100vw;
-  height: 100vh;
-  background-color: #0b0b45; /* Fundo azul escuro */
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #08004d 0%, #002a91 100%);
   color: white;
   font-family: 'Poppins', sans-serif;
   overflow-x: hidden;
+  padding-bottom: 10px;
+  animation: fadeIn 0.6s ease-in-out;
 }
 
-/* ======== TELA DE DIETA ======== */
+/* ======== ANIMAÇÃO ======== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ======== TELA DE ESCOLHA DE DIETA ======== */
 .dieta-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: calc(100vh - 80px);
+  justify-content: flex-start;
   width: 100%;
   text-align: center;
-  animation: fadeIn 0.6s ease-in-out;
+  margin-top: 20px; /* menor espaço da navbar */
+  padding-top: 40px; /* garante que não fique atrás da navbar */
 }
 
 .dieta-container h1 {
@@ -29,6 +37,8 @@
   letter-spacing: 1px;
   margin-bottom: 2rem;
   font-weight: 700;
+  align-items: flex-start;
+  text-align: left;
 }
 
 /* ======== GRID DE DIETAS ======== */
@@ -47,7 +57,6 @@
   border: none;
   border-radius: 1rem;
   color: white;
-  font-family: 'Poppins', sans-serif;
   font-weight: 600;
   text-align: center;
   cursor: pointer;
@@ -62,134 +71,154 @@
   transform: translateY(-6px);
 }
 
-/* ======== IMAGEM DA DIETA ======== */
 .fotodieta {
   width: 180px;
   height: 240px;
   object-fit: cover;
   border-radius: 1rem;
   margin-bottom: 0.6rem;
-  transition: filter 0.3s ease, transform 0.3s ease;
-}
-.alimento-item {
-  background-color: #10105a;
-  border-radius: 1rem;
-  padding: 1rem;
-  text-align: center;
-  width: 180px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-  border: none;
-  color: white;
-}
-
-.alimento-item:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 8px 16px rgba(91, 191, 126, 0.3);
-}
-
-
-
-
-/* ======== TEXTO ABAIXO DA IMAGEM ======== */
-.dieta-card span {
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  transition: 0.3s ease;
 }
 
 /* ======== CONTAINER DE ALIMENTOS ======== */
 .alimentos-container {
   width: 100%;
-  height: calc(100vh - 80px);
-  padding: 2rem 4rem;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #08004d 0%, #002a91 100%);
   display: flex;
   flex-direction: column;
+  align-items: center;
+  padding: 120px 3rem 2rem 2rem; /* 🟢 mais espaço p/ navbar fixa */
   animation: fadeIn 0.5s ease-in-out;
-  margin-top: 100px;
+  color: white;
 }
 
 /* ======== HEADER ======== */
-
-
-.header h1 {
-  font-size: 1.6rem;
-  font-weight: 600;
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 0 2rem;
 }
 
+.header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #d3d3d3;
+  letter-spacing: 1px;
+}
+
+/* ======== BOTÃO VOLTAR ======== */
 .voltar {
-  background-color: #00f054;
-  color: #2424ff;
+  background-color: #00bf63;
+  color: #0b0b45;
   border: none;
-  border-radius: 1rem;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  font-weight: 600;
+  border-radius: 20px;
+  padding: 0.5rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 700;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .voltar:hover {
-  background-color: #5bbf7e;
-  color: #0b0b45;
+  background-color: #09b461;
+  transform: scale(1.05);
 }
 
 /* ======== LISTA DE ALIMENTOS ======== */
 .lista {
   display: grid;
-  padding: 50px;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 4rem;
   width: 100%;
+  max-width: 900px;
   justify-items: center;
 }
 
+/* ======== ITEM DE ALIMENTO ======== */
 .alimento-item {
-  background-color: #10105a;
-  border-radius: 1rem;
-  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
   text-align: center;
-  width: 180px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  width: 200px;
+  height: 150px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  color: white;
 }
 
 .alimento-item:hover {
   transform: translateY(-6px);
-  box-shadow: 0 8px 16px rgba(91, 191, 126, 0.3);
+  box-shadow: 0 8px 16px rgba(0, 255, 84, 0.2);
 }
 
 .fotoalimento {
   width: 100%;
-  height: 130px;
+  height: 120px;
+  border-radius: 12px;
   object-fit: cover;
-  border-radius: 0.8rem;
-  margin-bottom: 0.8rem;
-  filter: brightness(0.9);
+  margin-bottom: 0.2rem;
 }
 
-.alimento-item span {
-  display: block;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #e0e0e0;
+/* ======== MODAL ======== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 }
 
-/* ======== ANIMAÇÃO ======== */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.modal-conteudo {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  width: 350px;
+  max-width: 90%;
+  text-align: center;
+  color: #000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-foto {
+  width: 150px;
+  height: 150px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.fechar-btn {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: #0b0b45;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
 /* ======== RESPONSIVO ======== */
-@media (max-width: 768px) {
-  .dieta-container h1 { font-size: 1.4rem; }
-  .dieta-card { width: 140px; }
-  .fotodieta { width: 140px; height: 190px; }
-  .lista { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+@media (max-width: 992px) {
+  .alimentos-container { padding-top: 90px; }
+  .principal-container { padding-top: 60px; }
+  .lista { gap: 1.5rem; }
 }
 
-@media (max-width: 480px) {
-  .voltar { padding: 0.3rem 0.8rem; font-size: 0.8rem; }
-  .fotoalimento { height: 110px; }
+@media (max-width: 576px) {
+  .principal-container { padding-top: 50px; }
+  .alimentos-container { padding-top: 80px; }
+  .dieta-card { width: 140px; }
+  .fotodieta { width: 140px; height: 190px; }
+  .lista {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    padding: 0 1rem;
+  }
 }

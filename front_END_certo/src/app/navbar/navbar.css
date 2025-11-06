@@ -1,8 +1,144 @@
-.logo{
-    width: 300px;
-    height: 150px;
-    margin: -20px;
+/* ======================= NAVBAR BASE ======================= */
+.navbar {
+  width: 100%;
+  height: 100px;
+  background-color: #2ecc71;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  box-sizing: border-box;
 }
-:host{
-    background-color: #209311;
+
+/* LOGO */
+.logo {
+  height: 90px;
+}
+
+/* AREA CENTRAL */
+.center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  max-width: 100%;
+}
+
+/* INPUT */
+.search-input {
+  width: 480px;
+  height: 45px;
+  border: 2px solid white;
+  background: transparent;
+  border-radius: 30px;
+  padding-left: 20px;
+  padding-right: 50px;
+  color: white;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.search-input::placeholder {
+  color: white;
+  opacity: 0.8;
+}
+
+/* ✅ LUPA SEM DESALINHAR EM RESOLUÇÕES DIFERENTES */
+.search-button {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: white;
+}
+
+/* PERFIL */
+.perfil-btn {
+  font-size: 22px;
+  color: white;
+  cursor: pointer;
+  letter-spacing: 2px;
+}
+
+
+
+/* ======================= RESPONSIVIDADE ======================= */
+
+/* ✅ TELA MÉDIA (tablets) */
+@media (max-width: 992px) {
+  .navbar {
+    height: 90px;
+    padding: 0 25px;
+  }
+
+  .logo {
+    height: 80px;
+  }
+
+  .search-input {
+    width: 350px;
+  }
+
+  .search-button {
+    right: 12px;
+  }
+
+  .perfil-btn {
+    font-size: 20px;
+  }
+}
+
+/* ✅ TELAS PEQUENAS (celulares) */
+@media (max-width: 576px) {
+  .navbar {
+    height: 80px;
+    padding: 0 15px;
+  }
+
+  .logo {
+    height: 65px;
+  }
+
+  .search-input {
+    width: 220px;
+    height: 40px;
+    font-size: 14px;
+  }
+
+  .search-button {
+    font-size: 18px;
+    right: 10px;
+  }
+
+  .perfil-btn {
+    font-size: 18px;
+  }
+}
+
+/* ✅ TELAS MUITO PEQUENAS (celulares pequenos mesmo) */
+@media (max-width: 380px) {
+  .navbar {
+    height: 75px;
+    padding: 0 10px;
+  }
+
+  .search-input {
+    width: 180px;
+  }
+
+  .logo {
+    height: 50px;
+  }
+
+  .perfil-btn {
+    font-size: 16px;
+  }
 }
