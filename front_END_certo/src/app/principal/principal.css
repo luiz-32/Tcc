@@ -1,224 +1,516 @@
-/* ======== CONTAINER PRINCIPAL ======== */
+/* ====== RESET E GLOBAL ====== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ====== CONTAINER PRINCIPAL ====== */
 .principal-container {
+  width: 100%;
+  max-height: 20px ;
+  background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #08004d 0%, #002a91 100%);
-  color: white;
+  padding-top: 80px;
+  margin-top: 30px;
   font-family: 'Poppins', sans-serif;
-  overflow-x: hidden;
-  padding-bottom: 10px;
-  animation: fadeIn 0.6s ease-in-out;
 }
 
-/* ======== ANIMAÇÃO ======== */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ======== TELA DE ESCOLHA DE DIETA ======== */
-.dieta-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
+/* ====== HOME ====== */
+.home-container {
   width: 100%;
-  text-align: center;
-  margin-top: 20px; /* menor espaço da navbar */
-  padding-top: 40px; /* garante que não fique atrás da navbar */
+  max-width: 1400px;
 }
 
-.dieta-container h1 {
-  font-size: 1.8rem;
-  letter-spacing: 1px;
-  margin-bottom: 2rem;
-  font-weight: 700;
-  align-items: flex-start;
-  text-align: left;
+/* ====== CARROSSEL CAPA ====== */
+.carrosel-unico {
+  width: 100%; /* ajuste como quiser */
+  height: 350px;     /* altura desejada */
+  margin: auto;
+  overflow: hidden;  /* garante que a imagem não escape da div */
 }
 
-/* ======== GRID DE DIETAS ======== */
-.dietas {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2rem;
-  width: 85%;
-  max-width: 1100px;
+.carrosel-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;      /* preenche TODA a div */
+  object-position: center; /* centraliza */
+  display: block;
 }
-
-/* ======== CARD DE DIETA ======== */
-.dieta-card {
-  background: none;
-  border: none;
-  border-radius: 1rem;
+.bemvindo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 5rem;
+  font-weight: 900;
   color: white;
-  font-weight: 600;
+  text-shadow: 30px 4px 20px rgba(0, 0, 0, 0.7);
+  z-index: 10;
+  margin: 0;
+  padding: 0;
   text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  width: 180px;
+  width: 100%;
+}
+
+
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -40%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* ====== TÍTULOS DAS SEÇÕES ====== */
+.secao-titulo {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #002a91;
+  margin: 60px 0 30px;
+  text-align: left;
+  width: 100%;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.secao-titulo::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 80px;
+  height: 5px;
+  background: linear-gradient(90deg, #002a91, #00bf63);
+  border-radius: 10px;
+}
+
+/* ====== SEÇÃO SOBRE NÓS ====== */
+.sobre-secao {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  gap: 50px;
+  margin-bottom: 80px;
+  background: white;
+  padding: 50px;
+  border-radius: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sobre-secao:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
+}
+
+.sobre-img-principal {
+  width: 450px;
+  height: 320px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 16px;
+  flex-shrink: 0;
+  box-shadow: 0 10px 30px rgba(0, 42, 145, 0.15);
+}
+
+.sobre-texto {
+  flex: 1;
+  padding: 20px;
+}
+
+.sobre-texto p {
+  color: #444;
+  line-height: 1.8;
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+  font-weight: 400;
+}
+
+.sobre-texto p:first-child {
+  font-size: 1.15rem;
+  color: #002a91;
+  font-weight: 500;
+}
+
+/* ====== DIETAS ====== */
+.dietas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+  margin-bottom: 80px;
+  padding: 0 10px;
+}
+
+.dieta-card {
+  background: white;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+}
+
+.dieta-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(0, 42, 145, 0.1), rgba(0, 191, 99, 0.1));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.dieta-card:hover::before {
+  opacity: 1;
 }
 
 .dieta-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 50px rgba(0, 42, 145, 0.2);
 }
 
 .fotodieta {
-  width: 180px;
-  height: 240px;
+  width: 100%;
+  height: 220px;
+  border-radius: 14px;
   object-fit: cover;
-  border-radius: 1rem;
-  margin-bottom: 0.6rem;
-  transition: 0.3s ease;
+  object-position: center;
+  margin-bottom: 15px;
+  position: relative;
+  z-index: 2;
 }
 
-/* ======== CONTAINER DE ALIMENTOS ======== */
+.dieta-card span {
+  display: block;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #002a91;
+  text-align: center;
+  line-height: 1.3;
+  position: relative;
+  z-index: 2;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ====== LISTAGEM DE ALIMENTOS ====== */
 .alimentos-container {
   width: 100%;
   min-height: 100vh;
-  background: linear-gradient(135deg, #08004d 0%, #002a91 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 120px 3rem 2rem 2rem; /* 🟢 mais espaço p/ navbar fixa */
-  animation: fadeIn 0.5s ease-in-out;
-  color: white;
+  background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+  color: #002a91;
+  padding: 130px 40px 80px;
 }
 
-/* ======== HEADER ======== */
 .header {
-  width: 100%;
   display: flex;
   justify-content: space-between;
+  margin-bottom: 40px;
   align-items: center;
-  margin-bottom: 2rem;
-  padding: 0 2rem;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .header h1 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #d3d3d3;
+  font-size: 3rem;
+  font-weight: 800;
   letter-spacing: 1px;
 }
 
-/* ======== BOTÃO VOLTAR ======== */
 .voltar {
-  background-color: #00bf63;
-  color: #0b0b45;
+  background: linear-gradient(135deg, #00bf63, #00d97e);
   border: none;
-  border-radius: 20px;
-  padding: 0.5rem 1.2rem;
-  font-size: 0.9rem;
+  padding: 14px 30px;
+  border-radius: 14px;
   font-weight: 700;
   cursor: pointer;
+  color: white;
+  font-size: 1.05rem;
   transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0, 191, 99, 0.3);
 }
 
 .voltar:hover {
-  background-color: #09b461;
-  transform: scale(1.05);
+  background: linear-gradient(135deg, #00a554, #00bf63);
+  transform: translateX(-5px);
+  box-shadow: 0 8px 25px rgba(0, 191, 99, 0.4);
 }
 
-/* ======== LISTA DE ALIMENTOS ======== */
+/* GRID */
 .lista {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 4rem;
-  width: 100%;
-  max-width: 900px;
-  justify-items: center;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 30px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-/* ======== ITEM DE ALIMENTO ======== */
 .alimento-item {
-  background-color: rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
-  text-align: center;
-  width: 200px;
-  height: 150px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  border-radius: 18px;
   cursor: pointer;
-  color: white;
+  transition: all 0.4s ease;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .alimento-item:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 8px 16px rgba(0, 255, 84, 0.2);
+  transform: translateY(-8px);
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
 }
 
 .fotoalimento {
   width: 100%;
-  height: 120px;
-  border-radius: 12px;
+  height: 180px;
   object-fit: cover;
-  margin-bottom: 0.2rem;
+  object-position: center;
 }
 
-/* ======== MODAL ======== */
+.alimento-item span {
+  display: block;
+  padding: 15px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.nenhum {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 1.4rem;
+  padding: 60px;
+  opacity: 0.8;
+}
+
+/* ====== MODAL ====== */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.7);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .modal-conteudo {
   background: white;
-  padding: 20px;
-  border-radius: 15px;
-  width: 350px;
-  max-width: 90%;
+  width: 90%;
+  max-width: 500px;
+  padding: 40px;
+  border-radius: 24px;
   text-align: center;
-  color: #000;
-  animation: fadeIn 0.3s ease-in-out;
+  color: #333;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .modal-foto {
-  width: 150px;
-  height: 150px;
-  border-radius: 10px;
+  width: 240px;
+  height: 240px;
+  border-radius: 16px;
   object-fit: cover;
+  object-position: center;
+  margin-bottom: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.modal-conteudo h2 {
+  color: #002a91;
+  margin-bottom: 20px;
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.descricao {
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 30px;
+  font-size: 1.05rem;
 }
 
 .fechar-btn {
-  margin-top: 15px;
-  padding: 10px 20px;
-  background: #0b0b45;
+  background: linear-gradient(135deg, #002a91, #004db3);
   color: white;
+  padding: 14px 40px;
   border: none;
-  border-radius: 10px;
+  border-radius: 14px;
   cursor: pointer;
+  font-weight: 700;
+  font-size: 1.05rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0, 42, 145, 0.3);
 }
 
-/* ======== RESPONSIVO ======== */
-@media (max-width: 992px) {
-  .alimentos-container { padding-top: 90px; }
-  .principal-container { padding-top: 60px; }
-  .lista { gap: 1.5rem; }
+.fechar-btn:hover {
+  background: linear-gradient(135deg, #001a5c, #002a91);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 42, 145, 0.4);
 }
 
-@media (max-width: 576px) {
-  .principal-container { padding-top: 50px; }
-  .alimentos-container { padding-top: 80px; }
-  .dieta-card { width: 140px; }
-  .fotodieta { width: 140px; height: 190px; }
+/* ====== RESPONSIVO ====== */
+@media (max-width: 1024px) {
+  .home-container {
+    padding: 0 30px;
+  }
+  
+  .carousel-container {
+    height: 400px;
+  }
+  
+  .carousel-texto {
+    font-size: 4rem !important;
+  }
+  
+  .sobre-secao {
+    padding: 40px;
+  }
+  
+  .sobre-img-principal {
+    width: 380px;
+    height: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-container {
+    padding: 0 20px;
+  }
+  
+  .carousel-container {
+    height: 350px;
+    margin-bottom: 50px;
+  }
+  
+  .carousel-texto {
+    font-size: 3.2rem !important;
+  }
+  
+  .secao-titulo {
+    font-size: 2rem;
+    margin: 40px 0 20px;
+  }
+  
+  .sobre-secao {
+    flex-direction: column;
+    padding: 30px;
+  }
+  
+  .sobre-img-principal {
+    width: 100%;
+    height: 280px;
+  }
+  
+  .sobre-texto p {
+    font-size: 1rem;
+  }
+  
+  .dietas {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  
+  .fotodieta {
+    height: 180px;
+  }
+  
+  .alimentos-container {
+    padding: 110px 20px 60px;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .carousel-container {
+    height: 280px;
+    border-radius: 16px;
+  }
+  
+  .carousel-texto {
+    font-size: 2rem !important;
+    letter-spacing: 1px !important;
+  }
+  
+  .secao-titulo {
+    font-size: 1.6rem;
+  }
+  
+  .sobre-secao {
+    padding: 20px;
+  }
+  
+  .sobre-img-principal {
+    height: 220px;
+  }
+  
+  .sobre-texto p {
+    font-size: 0.95rem;
+  }
+  
+  .dietas {
+    gap: 15px;
+  }
+  
+  .dieta-card {
+    padding: 15px;
+  }
+  
+  .fotodieta {
+    height: 160px;
+  }
+  
   .lista {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    padding: 0 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+  }
+  
+  .modal-conteudo {
+    padding: 30px 20px;
+  }
+  
+  .modal-foto {
+    width: 200px;
+    height: 200px;
   }
 }

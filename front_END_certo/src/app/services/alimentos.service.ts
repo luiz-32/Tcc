@@ -15,6 +15,7 @@ export interface Alimento {
   descricao: string;
 }
 
+
 // Modelo para descrição (tabela "descricao")
 export interface DescricaoAlimento {
   id: number;
@@ -40,4 +41,8 @@ export class AlimentosService {
   getDescricaoPorId(id: number): Observable<DescricaoAlimento> {
     return this.http.get<DescricaoAlimento>(`${this.descricaoUrl}/${id}`);
   }
+  getCategorias() {
+  return this.http.get<any[]>('http://localhost:3000/alimentos/categorias');
+}
+
 }

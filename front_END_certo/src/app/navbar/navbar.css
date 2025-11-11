@@ -28,6 +28,12 @@
   max-width: 100%;
 }
 
+
+.carousel-container {
+  margin-top: 25px;
+}
+
+
 /* INPUT */
 .search-input {
   width: 480px;

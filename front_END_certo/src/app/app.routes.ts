@@ -4,13 +4,11 @@ import { AuthGuard } from './guards/auth-guard';
 import { UsuarioComponent } from './usuario/usuario';
 import { TelaInicial } from './tela-inicial/tela-inicial';
 import { PrincipalComponent } from './principal/principal';
-import { PesquisarComponent} from './pesquisa/pesquisa';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'inicial', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'inicial', component:TelaInicial },
   { path: 'cadastro', component: UsuarioComponent },
-  { path: 'pesquisar', component: PesquisarComponent},
   { path: 'principal', component: PrincipalComponent, canActivate: [AuthGuard]}
 ];

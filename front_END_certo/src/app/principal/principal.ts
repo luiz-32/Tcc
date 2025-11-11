@@ -50,27 +50,31 @@ export class PrincipalComponent implements OnInit {
   }
 
   mudarDieta(tipo: string): void {
-    this.tipoDieta = tipo;
-    this.modoPesquisa = false;
+  this.tipoDieta = tipo;
+  this.modoPesquisa = false;
 
-    switch (tipo) {
-      case 'VEGANO':
-        this.alimentosRecomendados = this.todosAlimentos.filter(a => a.vegano);
-        break;
-      case 'VEGETARIANO':
-        this.alimentosRecomendados = this.todosAlimentos.filter(a => a.vegetariano);
-        break;
-      case 'OVOLACTOVEGETARIANO':
-        this.alimentosRecomendados = this.todosAlimentos.filter(a => a.ovolacto);
-        break;
-      case 'INTOLERANTE Á LACTOSE':
-        this.alimentosRecomendados = this.todosAlimentos.filter(a => a.intolerante_lactose);
-        break;
-      case 'INTOLERANTE Á GLUTEN':
-        this.alimentosRecomendados = this.todosAlimentos.filter(a => a.intolerante_gluten);
-        break;
-    }
+  switch (tipo) {
+    case 'VEGANO':
+      this.alimentosRecomendados = this.todosAlimentos.filter(a => a.vegano);
+      break;
+    case 'VEGETARIANO':
+      this.alimentosRecomendados = this.todosAlimentos.filter(a => a.vegetariano);
+      break;
+    case 'OVOLACTOVEGETARIANO':
+      this.alimentosRecomendados = this.todosAlimentos.filter(a => a.ovolacto);
+      break;
+    case 'INTOLERANTE Á LACTOSE':
+      this.alimentosRecomendados = this.todosAlimentos.filter(a => a.intolerante_lactose);
+      break;
+    case 'INTOLERANTE Á GLUTEN':
+      this.alimentosRecomendados = this.todosAlimentos.filter(a => a.intolerante_gluten);
+      break;
   }
+
+  // ⬆⬆⬆ ADICIONE ISTO
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 
   pesquisarAlimentos(termo: string) {
     termo = termo.trim().toLowerCase();
@@ -113,4 +117,5 @@ export class PrincipalComponent implements OnInit {
     this.auth.logout();
     this.router.navigate(['/inicial']);
   }
+  
 }

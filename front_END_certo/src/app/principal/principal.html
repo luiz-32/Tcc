@@ -1,5 +1,6 @@
 <div class="principal-container">
 
+  <!-- ✅ NAVBAR -->
   <app-navbar 
     [usuarioNome]="usuarioNome"
     (sairEvent)="sair()"
@@ -7,10 +8,36 @@
   </app-navbar>
 
 
-  <!-- ✅ TELA INICIAL COM AS DIETAS -->
-  <div *ngIf="!tipoDieta && !modoPesquisa" class="dieta-container">
+  <!-- ✅ TELA INICIAL -->
+  <div *ngIf="!tipoDieta && !modoPesquisa" class="home-container">
+
+    <header style="margin-top:20px ;">
+      <!-- ✅ CAROUSEL -->
+    <div class="carrosel-unico">
+      <img src="foto/capa.jpg" class="carrosel-img">
+      <h1 class="bemvindo">BEM-VINDO(a)</h1>
+</div>
+
+
+    </header>
+    <!-- ✅ TÍTULO SOBRE NÓS -->
+    <h2 class="secao-titulo">SOBRE NÓS</h2>
+
+    <!-- ✅ SEÇÃO SOBRE NÓS -->
+    <div class="sobre-secao">
+      <img src="foto/comida.jpg" class="sobre-img-principal">
+      <div class="sobre-texto">
+        <p>Bem-vindo ao nosso espaço dedicado à alimentação saudável e consciente! Aqui você encontra informações sobre diferentes tipos de dietas, alimentos recomendados e dicas para uma vida mais equilibrada.</p>
+        <p>Nossa missão é ajudar você a descobrir opções alimentares que se adequem ao seu estilo de vida e necessidades específicas.</p>
+      </div>
+    </div>
+
+    <!-- ✅ TÍTULO DIETAS -->
+    <h2 class="secao-titulo">DIETAS</h2>
+
+    <!-- ✅ CARDS DE DIETAS -->
     <div class="dietas">
-      
+
       <button class="dieta-card" (click)="mudarDieta('VEGANO')">
         <img src="foto/vegano.jpg" class="fotodieta">
         <span>VEGANA</span>
@@ -61,7 +88,7 @@
   </div>
 
 
-  <!-- ✅ RESULTADO DA PESQUISA -->
+  <!-- ✅ RESULTADO PESQUISA -->
   <div *ngIf="modoPesquisa" class="alimentos-container">
 
     <div class="header">
@@ -80,7 +107,7 @@
 
       </div>
 
-      <p *ngIf="resultadosPesquisa.length === 0" style="color:white;margin-top:20px;">
+      <p *ngIf="resultadosPesquisa.length === 0" class="nenhum">
         Nenhum alimento encontrado.
       </p>
 

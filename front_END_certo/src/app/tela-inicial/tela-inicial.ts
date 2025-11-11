@@ -7,7 +7,6 @@ import { Component } from '@angular/core';
   styleUrl: './tela-inicial.css'
 })
 export class TelaInicial {
-  mostrarSobreNos = false;
 
 }
 
