@@ -13,6 +13,7 @@ export interface Alimento {
   intolerante_gluten: boolean;
   imagem: string;
   descricao: string;
+  categoria: string;
 }
 
 
@@ -41,8 +42,13 @@ export class AlimentosService {
   getDescricaoPorId(id: number): Observable<DescricaoAlimento> {
     return this.http.get<DescricaoAlimento>(`${this.descricaoUrl}/${id}`);
   }
-  getCategorias() {
+getCategorias(): Observable<any[]> {
   return this.http.get<any[]>('http://localhost:3000/alimentos/categorias');
 }
+
+getAlimentosPorCategoria(id: number): Observable<Alimento[]> {
+  return this.http.get<Alimento[]>(`http://localhost:3000/alimentos/categoria/${id}`);
+}
+
 
 }

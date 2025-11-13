@@ -1,135 +1,124 @@
+<!-- ✅ NAVBAR -->
 <div class="principal-container">
-
-  <!-- ✅ NAVBAR -->
   <app-navbar 
     [usuarioNome]="usuarioNome"
     (sairEvent)="sair()"
     (search)="pesquisarAlimentos($event)">
   </app-navbar>
 
+  <!-- ✅ HOME -->
+  <div *ngIf="!modoPesquisa && !tipoDieta" class="home-container">
 
-  <!-- ✅ TELA INICIAL -->
-  <div *ngIf="!tipoDieta && !modoPesquisa" class="home-container">
-
-    <header style="margin-top:20px ;">
-      <!-- ✅ CAROUSEL -->
+    <!-- ✅ CAPA -->
     <div class="carrosel-unico">
-      <img src="foto/capa.jpg" class="carrosel-img">
-      <h1 class="bemvindo">BEM-VINDO(a)</h1>
+      <img src="foto/capa.jpg" alt="Capa" class="carrosel-img">
+      <h1 class="bemvindo">BEM-VINDO(A), {{ usuarioNome || 'USUÁRIO' }}!</h1>
+    </div>
+
+    <!-- ✅ SOBRE NÓS -->
+    <h2 class="secao-titulo">Sobre Nós</h2>
+    <div class="sobre-secao">
+      <img src="foto/carrosel2.jpg" alt="Sobre nós" class="sobre-img-principal">
+      <div class="sobre-texto">
+        <p>Nosso objetivo é te ajudar a descobrir alimentos ideais para seu estilo de vida e necessidades alimentares.</p>
+        <p>Com base nas suas preferências, oferecemos opções variadas, equilibradas e saborosas.</p>
+      </div>
+    </div>
+
+    <!-- ✅ CATEGORIAS + ALIMENTOS -->
+    <!-- ✅ CATEGORIAS + ALIMENTOS -->
+<h2 class="secao-titulo">Categorias</h2>
+
+<div *ngFor="let cat of categorias" class="categoria-secao">
+  <h3 class="categoria-nome">{{ cat.nome }}</h3>
+
+  <div class="carrossel-container">
+    <button class="seta seta-esquerda" (click)="rolar(carrosselLista, 'esquerda')">&#10094;</button>
+
+    <div class="carrossel-lista" #carrosselLista>
+      <div *ngFor="let alimento of cat.alimentos" class="card-alimento">
+        <img [src]="'http://localhost:3000/' + alimento.imagem" alt="{{ alimento.nome }}">
+        <div class="card-info">
+          <h4>{{ alimento.nome }}</h4>
+          <p>{{ alimento.descricao || 'Clique para saber mais' }}</p>
+        </div>
+      </div>
+
+      <div *ngIf="!cat.alimentos || cat.alimentos.length === 0" class="nenhum">
+        Nenhum alimento nessa categoria.
+      </div>
+    </div>
+
+    <button class="seta seta-direita" (click)="rolar(carrosselLista, 'direita')">&#10095;</button>
+  </div>
 </div>
 
 
-    </header>
-    <!-- ✅ TÍTULO SOBRE NÓS -->
-    <h2 class="secao-titulo">SOBRE NÓS</h2>
-
-    <!-- ✅ SEÇÃO SOBRE NÓS -->
-    <div class="sobre-secao">
-      <img src="foto/comida.jpg" class="sobre-img-principal">
-      <div class="sobre-texto">
-        <p>Bem-vindo ao nosso espaço dedicado à alimentação saudável e consciente! Aqui você encontra informações sobre diferentes tipos de dietas, alimentos recomendados e dicas para uma vida mais equilibrada.</p>
-        <p>Nossa missão é ajudar você a descobrir opções alimentares que se adequem ao seu estilo de vida e necessidades específicas.</p>
-      </div>
-    </div>
-
-    <!-- ✅ TÍTULO DIETAS -->
-    <h2 class="secao-titulo">DIETAS</h2>
-
-    <!-- ✅ CARDS DE DIETAS -->
+    <!-- ✅ DIETAS -->
+    <h2 class="secao-titulo">Dietas</h2>
     <div class="dietas">
+      <div class="dieta-card" (click)="mudarDieta('VEGANO')">
+        <img src="foto/vegano.jpg" class="fotodieta" alt="Vegano">
+        <span>Vegano</span>
+      </div>
 
-      <button class="dieta-card" (click)="mudarDieta('VEGANO')">
-        <img src="foto/vegano.jpg" class="fotodieta">
-        <span>VEGANA</span>
-      </button>
+      <div class="dieta-card" (click)="mudarDieta('VEGETARIANO')">
+        <img src="foto/vegetariano.jpg" class="fotodieta" alt="Vegetariano">
+        <span>Vegetariano</span>
+      </div>
 
-      <button class="dieta-card" (click)="mudarDieta('VEGETARIANO')">
-        <img src="foto/vegetariano.jpg" class="fotodieta">
-        <span>VEGETARIANA</span>
-      </button>
+      <div class="dieta-card" (click)="mudarDieta('OVOLACTOVEGETARIANO')">
+        <img src="foto/ovolacto.jpg" class="fotodieta" alt="Ovolacto">
+        <span>Ovolactovegetariano</span>
+      </div>
 
-      <button class="dieta-card" (click)="mudarDieta('INTOLERANTE Á LACTOSE')">
-        <img src="foto/intolerante.jpg" class="fotodieta">
-        <span>INTOLERANTE Á LACTOSE</span>
-      </button>
+      <div class="dieta-card" (click)="mudarDieta('INTOLERANTE Á LACTOSE')">
+        <img src="foto/intolerante.jpg" class="fotodieta" alt="Intolerante à lactose">
+        <span>Intolerante à Lactose</span>
+      </div>
 
-      <button class="dieta-card" (click)="mudarDieta('OVOLACTOVEGETARIANO')">
-        <img src="foto/ovolacto.jpg" class="fotodieta">
-        <span>OVOLACTOVEGETARIANO</span>
-      </button>
-
-      <button class="dieta-card" (click)="mudarDieta('INTOLERANTE Á GLUTEN')">
-        <img src="foto/gluten.jpg" class="fotodieta">
-        <span>INTOLERANTE Á GLÚTEN</span>
-      </button>
-
-    </div>
-  </div>
-
-
-  <!-- ✅ LISTA DA DIETA -->
-  <div *ngIf="tipoDieta && !modoPesquisa" class="alimentos-container">
-
-    <div class="header">
-      <h1>{{ tipoDieta }}</h1>
-      <button class="voltar" (click)="voltar()">⬅ Voltar</button>
-    </div>
-
-    <div class="lista">
-      <div class="alimento-item"
-          *ngFor="let alimento of alimentosRecomendados"
-          (click)="abrirModal(alimento)">
-
-        <img [src]="'http://localhost:3000/' + alimento.imagem" class="fotoalimento">
-        <span>{{ alimento.nome }}</span>
-
+      <div class="dieta-card" (click)="mudarDieta('INTOLERANTE Á GLUTEN')">
+        <img src="foto/gluten.jpg" class="fotodieta" alt="Intolerante ao glúten">
+        <span>Intolerante ao Glúten</span>
       </div>
     </div>
   </div>
 
+  <div *ngIf="tipoDieta || categoriaSelecionada" class="alimentos-container"> <div class="header"> 
+    <h1>{{ tipoDieta || categoriaSelecionada }}</h1> 
+    <button class="voltar" (click)="voltar()">Voltar</button> 
+  </div> 
+  <div class="lista"> 
+    <div *ngFor="let alimento of alimentosRecomendados" class="card-alimento" (click)="abrirModal(alimento)"> 
+      <img [src]="'http://localhost:3000/' + alimento.imagem" class="fotoalimento"> 
+      <span>{{ alimento.nome }}</span> 
+    </div> 
+    <div *ngIf="alimentosRecomendados.length === 0" class="nenhum"> Nenhum alimento encontrado. 
+    </div> </div> 
+</div>
 
-  <!-- ✅ RESULTADO PESQUISA -->
+  <!-- ✅ PESQUISA -->
   <div *ngIf="modoPesquisa" class="alimentos-container">
-
     <div class="header">
-      <h1>Resultado da pesquisa</h1>
-      <button class="voltar" (click)="sairPesquisa()">⬅ Voltar</button>
+      <h1>Resultados da Pesquisa</h1>
+      <button class="voltar" (click)="sairPesquisa()">Voltar</button>
     </div>
-
     <div class="lista">
-
-      <div class="alimento-item"
-          *ngFor="let alimento of resultadosPesquisa"
-          (click)="abrirModal(alimento)">
-
+      <div *ngFor="let alimento of resultadosPesquisa" class="card-alimento" (click)="abrirModal(alimento)">
         <img [src]="'http://localhost:3000/' + alimento.imagem" class="fotoalimento">
         <span>{{ alimento.nome }}</span>
-
       </div>
-
-      <p *ngIf="resultadosPesquisa.length === 0" class="nenhum">
-        Nenhum alimento encontrado.
-      </p>
-
+      <div *ngIf="resultadosPesquisa.length === 0" class="nenhum">Nenhum resultado encontrado.</div>
     </div>
   </div>
-
 
   <!-- ✅ MODAL -->
-  <div class="modal-overlay" *ngIf="alimentoSelecionado" (click)="fecharModal()">
-    <div class="modal-conteudo" (click)="$event.stopPropagation()">
-
-      <img [src]="'http://localhost:3000/' + alimentoSelecionado.imagem"
-           class="modal-foto">
-
+  <div *ngIf="alimentoSelecionado" class="modal-overlay">
+    <div class="modal-conteudo">
+      <img [src]="'http://localhost:3000/' + alimentoSelecionado.imagem" class="modal-foto">
       <h2>{{ alimentoSelecionado.nome }}</h2>
-
-      <p class="descricao">
-        {{ alimentoSelecionado.descricao }}
-      </p>
-
+      <p class="descricao">{{ alimentoSelecionado.descricao }}</p>
       <button class="fechar-btn" (click)="fecharModal()">Fechar</button>
     </div>
   </div>
-
 </div>

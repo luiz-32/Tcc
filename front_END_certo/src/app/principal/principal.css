@@ -8,13 +8,14 @@
 /* ====== CONTAINER PRINCIPAL ====== */
 .principal-container {
   width: 100%;
-  max-height: 20px ;
+  max-height: 20px;
   background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 80px;
-  margin-top: 30px;
+  padding: 0px 20px;
+  padding-top: 30px;
+  margin-top: 80px;
   font-family: 'Poppins', sans-serif;
 }
 
@@ -26,46 +27,41 @@
 
 /* ====== CARROSSEL CAPA ====== */
 .carrosel-unico {
-  width: 100%; /* ajuste como quiser */
-  height: 350px;     /* altura desejada */
-  margin: auto;
-  overflow: hidden;  /* garante que a imagem não escape da div */
+  position: relative;
+  overflow: hidden;
+  height: 310px;
+}
+
+.carrosel-unico::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.45));
+  z-index: 10;
+  pointer-events: none;
 }
 
 .carrosel-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;      /* preenche TODA a div */
-  object-position: center; /* centraliza */
-  display: block;
+  object-fit: cover;
 }
+
+/* ====== TEXTO BEM-VINDO CENTRALIZADO ====== */
 .bemvindo {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 5rem;
-  font-weight: 900;
   color: white;
-  text-shadow: 30px 4px 20px rgba(0, 0, 0, 0.7);
-  z-index: 10;
-  margin: 0;
-  padding: 0;
+  font-size: clamp(2rem, 5vw, 4.5rem);
+  font-weight: 900;
   text-align: center;
+  text-shadow: 3px 4px 20px rgba(0, 0, 0, 0.7);
+  z-index: 14;
   width: 100%;
-}
-
-
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -40%);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
+  padding: 0 20px;
+  pointer-events: none;
 }
 
 /* ====== TÍTULOS DAS SEÇÕES ====== */
@@ -136,6 +132,106 @@
   font-size: 1.15rem;
   color: #002a91;
   font-weight: 500;
+}
+
+/* ====== CATEGORIAS ====== */
+.categoria-secao {
+  margin-bottom: 60px;
+}
+
+.categoria-nome {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #002a91;
+  margin-bottom: 25px;
+  border-left: 6px solid #00bf63;
+  padding-left: 15px;
+}
+
+.carrossel-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  width: 100%;
+  margin: 20px 0;
+}
+
+.carrossel-lista {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 10px 40px;
+}
+
+.carrossel-lista::-webkit-scrollbar {
+  display: none;
+}
+
+.card-alimento {
+  flex: 0 0 250px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+  cursor: pointer;
+}
+
+.card-alimento:hover {
+  transform: scale(1.05);
+}
+
+.card-alimento img {
+  width: 100%;
+  height: 160px;
+  border-radius: 12px 12px 0 0;
+  object-fit: cover;
+}
+
+.card-info {
+  padding: 10px;
+  text-align: center;
+  color: #222;
+}
+
+.card-info h4 {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.card-info p {
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.seta {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.4);
+  border: none;
+  color: #fff;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+  font-size: 20px;
+  z-index: 10;
+  transition: background 0.3s;
+}
+
+.seta:hover {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.seta-esquerda {
+  left: 5px;
+}
+
+.seta-direita {
+  right: 5px;
 }
 
 /* ====== DIETAS ====== */
@@ -209,7 +305,7 @@
 /* ====== LISTAGEM DE ALIMENTOS ====== */
 .alimentos-container {
   width: 100%;
-  min-height: 100vh;
+  min-height: 90vh;
   background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
   color: #002a91;
   padding: 130px 40px 80px;
@@ -229,6 +325,7 @@
   font-size: 3rem;
   font-weight: 800;
   letter-spacing: 1px;
+  color: #002a91;
 }
 
 .voltar {
@@ -250,44 +347,52 @@
   box-shadow: 0 8px 25px rgba(0, 191, 99, 0.4);
 }
 
-/* GRID */
 .lista {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 20px;
   max-width: 1400px;
   margin: 0 auto;
 }
 
 .alimento-item {
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(10px);
-  border-radius: 18px;
+  background: #869cec;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.4s ease;
+  transition: all 0.3s ease;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
 }
 
 .alimento-item:hover {
-  transform: translateY(-8px);
-  background: rgba(255, 255, 255, 0.18);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .fotoalimento {
   width: 100%;
-  height: 180px;
+  height: 100px;
   object-fit: cover;
   object-position: center;
 }
 
 .alimento-item span {
   display: block;
-  padding: 15px;
+  padding: 12px 8px;
   text-align: center;
-  font-weight: 600;
-  font-size: 1.05rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: white;
+  text-transform: uppercase;
+  background: #869cec;
+  letter-spacing: 0.3px;
+  line-height: 1.3;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  min-height: fit-content;
 }
 
 .nenhum {
@@ -296,6 +401,7 @@
   font-size: 1.4rem;
   padding: 60px;
   opacity: 0.8;
+  color: #002a91;
 }
 
 /* ====== MODAL ====== */
@@ -387,41 +493,9 @@
 }
 
 /* ====== RESPONSIVO ====== */
-@media (max-width: 1024px) {
-  .home-container {
-    padding: 0 30px;
-  }
-  
-  .carousel-container {
-    height: 400px;
-  }
-  
-  .carousel-texto {
-    font-size: 4rem !important;
-  }
-  
-  .sobre-secao {
-    padding: 40px;
-  }
-  
-  .sobre-img-principal {
-    width: 380px;
-    height: 280px;
-  }
-}
-
 @media (max-width: 768px) {
   .home-container {
     padding: 0 20px;
-  }
-  
-  .carousel-container {
-    height: 350px;
-    margin-bottom: 50px;
-  }
-  
-  .carousel-texto {
-    font-size: 3.2rem !important;
   }
   
   .secao-titulo {
@@ -459,19 +533,23 @@
   .header h1 {
     font-size: 2rem;
   }
+  
+  .lista {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+  }
+  
+  .fotoalimento {
+    height: 120px;
+  }
+  
+  .alimento-item span {
+    font-size: 0.75rem;
+    padding: 10px 6px;
+  }
 }
 
 @media (max-width: 480px) {
-  .carousel-container {
-    height: 280px;
-    border-radius: 16px;
-  }
-  
-  .carousel-texto {
-    font-size: 2rem !important;
-    letter-spacing: 1px !important;
-  }
-  
   .secao-titulo {
     font-size: 1.6rem;
   }
@@ -501,8 +579,17 @@
   }
   
   .lista {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+  }
+  
+  .fotoalimento {
+    height: 100px;
+  }
+  
+  .alimento-item span {
+    font-size: 0.7rem;
+    padding: 8px 4px;
   }
   
   .modal-conteudo {

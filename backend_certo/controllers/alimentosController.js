@@ -51,10 +51,32 @@ const getDescricaoPorId = (req, res) => {
     res.json(results[0]);
   });
 };
+// ===== BUSCAR CATEGORIAS =====
+const getCategorias = (req, res) => {
+  const sql = "SELECT * FROM categorias";
+  connection.query(sql, (err, results) => {
+    if (err) return res.status(500).json({ erro: "Erro ao buscar categorias" });
+    res.json(results);
+  });
+};
+
+// ===== BUSCAR ALIMENTOS POR CATEGORIA =====
+const getAlimentosPorCategoria = (req, res) => {
+  const { id } = req.params;
+  const sql = "SELECT * FROM alimentos WHERE id_categoria = ?";
+  connection.query(sql, [id], (err, results) => {
+    if (err) return res.status(500).json({ erro: "Erro ao buscar alimentos da categoria" });
+    res.json(results);
+  });
+};
 
 module.exports = {
   uploadFile,
   getAlimentos,
   upload,
-  getDescricaoPorId
+  getDescricaoPorId,
+  getCategorias,
+  getAlimentosPorCategoria
 };
+
+

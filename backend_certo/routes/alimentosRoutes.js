@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 const alimentosController = require("../controllers/alimentosController");
 
-router.get("/alimentos", alimentosController.getAlimentos);
-router.get("/descricao/:id", alimentosController.getDescricaoPorId);
-router.post("/upload", alimentosController.upload.single("imagem"), alimentosController.uploadFile);
-
+router.get("/alimentos", alimentosController.getAlimentos); router.get("/descricao/:id", alimentosController.getDescricaoPorId); 
+router.post("/upload", alimentosController.upload.single("imagem"), alimentosController.uploadFile); 
+router.get("/alimentos/categorias", alimentosController.getCategorias); 
+router.get("/alimentos/categoria/:id", alimentosController.getAlimentosPorCategoria);
 
 module.exports = router;
