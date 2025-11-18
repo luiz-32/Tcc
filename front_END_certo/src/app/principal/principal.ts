@@ -166,4 +166,23 @@ rolar(elemento: HTMLElement, direcao: 'esquerda' | 'direita') {
     this.auth.logout();
     this.router.navigate(['/inicial']);
   }
+  scrollTo(sectionId: string) {
+    setTimeout(() => {
+      const elemento = document.getElementById(sectionId);
+      if (!elemento) return;
+
+      const navbar = document.querySelector('nav');
+      const navbarHeight = navbar
+        ? (navbar as HTMLElement).offsetHeight
+        : 80;
+
+      const posicaoTop =
+        elemento.getBoundingClientRect().top + window.scrollY - navbarHeight;
+
+      window.scrollTo({
+        top: posicaoTop,
+        behavior: 'smooth'
+      });
+    }, 50);
+  }
 }

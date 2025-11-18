@@ -1,9 +1,10 @@
 <!-- ✅ NAVBAR -->
-<div class="principal-container">
+<div class="principal-container" id="home">
   <app-navbar 
     [usuarioNome]="usuarioNome"
     (sairEvent)="sair()"
-    (search)="pesquisarAlimentos($event)">
+    (search)="pesquisarAlimentos($event)"
+    (navigate)="scrollTo($event)">
   </app-navbar>
 
   <!-- ✅ HOME -->
@@ -16,7 +17,7 @@
     </div>
 
     <!-- ✅ SOBRE NÓS -->
-    <h2 class="secao-titulo">Sobre Nós</h2>
+    <h2 class="secao-titulo" id="sobre">Sobre Nós</h2>
     <div class="sobre-secao">
       <img src="foto/carrosel2.jpg" alt="Sobre nós" class="sobre-img-principal">
       <div class="sobre-texto">
@@ -27,7 +28,7 @@
 
     <!-- ✅ CATEGORIAS + ALIMENTOS -->
     <!-- ✅ CATEGORIAS + ALIMENTOS -->
-<h2 class="secao-titulo">Categorias</h2>
+<h2 class="secao-titulo" id="categorias">Categorias</h2>
 
 <div *ngFor="let cat of categorias" class="categoria-secao">
   <h3 class="categoria-nome">{{ cat.nome }}</h3>
@@ -55,7 +56,7 @@
 
 
     <!-- ✅ DIETAS -->
-    <h2 class="secao-titulo">Dietas</h2>
+    <h2 class="secao-titulo" id="dietas">Dietas</h2>
     <div class="dietas">
       <div class="dieta-card" (click)="mudarDieta('VEGANO')">
         <img src="foto/vegano.jpg" class="fotodieta" alt="Vegano">

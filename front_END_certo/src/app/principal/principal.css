@@ -14,7 +14,7 @@
   flex-direction: column;
   align-items: center;
   padding: 0px 20px;
-  padding-top: 30px;
+  padding-top: 65px;
   margin-top: 80px;
   font-family: 'Poppins', sans-serif;
 }
@@ -238,8 +238,8 @@
 .dietas {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 30px;
-  margin-bottom: 80px;
+  gap: 20px;
+  margin-bottom: 70px;
   padding: 0 10px;
 }
 
@@ -249,7 +249,7 @@
   cursor: pointer;
   text-align: center;
   border-radius: 20px;
-  padding: 20px;
+  padding: 15px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
@@ -280,7 +280,7 @@
 
 .fotodieta {
   width: 100%;
-  height: 220px;
+  height: 210px;
   border-radius: 14px;
   object-fit: cover;
   object-position: center;

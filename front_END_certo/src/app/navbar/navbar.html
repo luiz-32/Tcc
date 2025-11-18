@@ -15,13 +15,37 @@
       <button type="submit" class="search-btn">🔍</button>
     </form>
 
-    <!-- Ícone de Perfil -->
+    <!-- Menu de Navegação -->
+    <div class="nav-menu">
+      <div class="container-fluid">
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="#" class="nav-link" (click)="emitNavigate($event, 'home')">INÍCIO</a>
+          </li>
+
+          <li class="nav-item">
+            <a href="#" class="nav-link" (click)="emitNavigate($event, 'sobre')">SOBRE NÓS</a>
+          </li>
+
+          <li class="nav-item dropdown-nav">
+            <a href="#" class="nav-link" (click)="emitNavigate($event, 'categorias')">CATEGORIAS</a>
+          </li>
+
+          <li class="nav-item dropdown-nav">
+            <a href="#" class="nav-link" (click)="emitNavigate($event, 'dietas')">DIETAS</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Perfil -->
     <div class="dropdown">
       <a href="#" 
          class="d-flex align-items-center text-decoration-none"
          id="profileDropdown"
          data-bs-toggle="dropdown"
          aria-expanded="false">
+
          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
            <circle cx="20" cy="20" r="18" stroke="#000000" stroke-width="2"/>
            <circle cx="20" cy="16" r="6" stroke="#000000" stroke-width="2" fill="none"/>
@@ -38,32 +62,6 @@
         <li><a class="dropdown-item" (click)="sair()">🚪 Sair</a></li>
       </ul>
     </div>
-  </div>
 
-  <!-- Menu de Navegação -->
-  <div class="nav-menu">
-    <div class="container-fluid">
-      <ul class="nav-list">
-        <li class="nav-item">
-          <a href="#home" class="nav-link" >🏠 Início</a>
-        </li>
-        
-        <li class="nav-item">
-          <a href="#sobre" class="nav-link" >📖 Sobre Nós</a>
-        </li>
-
-        <li class="nav-item dropdown-nav">
-          <a href="#categorias" class="nav-link">
-            🍎 Categorias
-          </a>
-        </li>
-
-        <li class="nav-item dropdown-nav">
-          <a href="#dietas" class="nav-link">
-            🥗 Dietas
-          </a>
-        </li>
-      </ul>
-    </div>
   </div>
 </nav>

@@ -25,13 +25,14 @@ html {
 
 /* ===== LOGO ===== */
 .logo {
-  height: 70px;
+  height: 80px;
+  width: auto;
   cursor: pointer;
 }
 
 /* ===== BUSCA ===== */
 .search-form {
-  width: 45%;
+  width: 30%;
   max-width: 500px;
   position: relative;
   display: flex;
@@ -124,8 +125,8 @@ svg:hover {
 
 /* ===== MENU DE NAVEGAÇÃO ===== */
 .nav-menu {
-  width: 100%;
-  background-color: #5ab85b;
+  width: 50%;
+  background-color: #6BC96C;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 

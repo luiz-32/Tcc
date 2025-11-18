@@ -14,6 +14,9 @@ export class Navbar {
   @Output() sairEvent = new EventEmitter<void>();
   @Output() search = new EventEmitter<string>();
 
+  // emite para o componente principal rolar até a seção
+  @Output() navigate = new EventEmitter<string>();
+
   termo: string = '';
 
   onSubmit(event: Event) {
@@ -25,5 +28,11 @@ export class Navbar {
 
   sair() {
     this.sairEvent.emit();
+  }
+
+  // apenas emite o ID da seção
+  emitNavigate(event: Event, sectionId: string) {
+    event.preventDefault();
+    this.navigate.emit(sectionId);
   }
 }
