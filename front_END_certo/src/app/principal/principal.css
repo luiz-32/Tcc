@@ -205,6 +205,50 @@
   font-size: 0.85rem;
   color: #555;
 }
+/* === CARD IGUAL AO MODELO DA IMAGEM (SOJA) === */
+.alimento {
+  width: 150px;
+  height: 210px;
+  background: #ffffff;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.alimento:hover {
+  transform: scale(1.05);
+}
+
+/* Imagem igual ao card enviado */
+.alimento img {
+  width: 100%;
+  height: 70%;
+  object-fit: cover;
+  border-radius: 14px 14px 0 0;
+}
+
+/* Nome centralizado igual ao modelo */
+.nome-alimento {
+  width: 100%;
+  height: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 900;
+  color: #000;
+  text-align: center;
+  padding: 5px;
+  background: white;
+  border-radius: 0 0 14px 14px;
+}
+
 
 .seta {
   position: absolute;
