@@ -4,19 +4,27 @@
     [usuarioNome]="usuarioNome"
     (sairEvent)="sair()"
     (search)="pesquisarAlimentos($event)"
-    (navigate)="scrollTo($event)">
+    (navigate)="scrollTo($event)"
+    (favoritosEvent)="exibirFavoritos()">
   </app-navbar>
 
   <!-- HOME (RESTAURADO: *ngIf original para trocar DOM) -->
-  <div *ngIf="!modoPesquisa && !tipoDieta && !categoriaSelecionada" class="home-container">
+  <div *ngIf="!modoPesquisa && !tipoDieta && !categoriaSelecionada && !modoFavoritos" class="home-container">
     <!-- CAPA -->
     <div class="carrosel-unico">
       <img src="foto/capa.jpg" alt="Capa" class="carrosel-img">
       <h1 class="bemvindo">BEM-VINDO(A), {{ usuarioNome || 'USUÁRIO' }}!</h1>
     </div>
 
+    <!-- BOTÃO DE FAVORITOS -->
+    <div class="favoritos-btn-container">
+      <button class="btn-favoritos" (click)="exibirFavoritos()" *ngIf="favoritos.length > 0">
+        ⭐ Meus Favoritos ({{ favoritos.length }})
+      </button>
+    </div>
+
     <!-- SOBRE -->
-    <h2 class="secao-titulo" id="sobre">Sobre Nós</h2>
+     <h2 class="secao-titulo" id="sobre">Sobre Nós</h2>
     <div class="sobre-secao">
       <img src="foto/carrosel2.jpg" alt="Sobre nós" class="sobre-img-principal">
       <div class="sobre-texto">
@@ -79,16 +87,22 @@
   </div>
 
   <!-- TELA DE LISTAGEM (Dieta / Categoria) -->
-  <div *ngIf="(tipoDieta || categoriaSelecionada) && !modoPesquisa" class="alimentos-container">
+  <div *ngIf="(tipoDieta || categoriaSelecionada) && !modoPesquisa && !modoFavoritos" class="alimentos-container">
     <div class="header">
       <h1>{{ tipoDieta || categoriaSelecionada }}</h1>
       <button class="voltar" (click)="voltar()">Voltar</button>
     </div>
 
-    <div class="lista">
+    <div class="lista" id="secao-alimentos">
       <div *ngFor="let alimento of alimentosRecomendados" class="alimento" (click)="abrirModal(alimento)">
         <img [src]="'http://localhost:3000/' + alimento.imagem" class="fotoalimento">
         <span>{{ alimento.nome }}</span>
+        <button class="btn-favoritar" 
+          [class.favorito]="isFavorito(alimento.id)"
+          (click)="isFavorito(alimento.id) ? deletarFavorito(obterIdFavorito(alimento.id)!, alimento.nome) : adicionarFavorito(alimento); $event.stopPropagation()"
+          [title]="isFavorito(alimento.id) ? 'Remover dos favoritos' : 'Adicionar aos favoritos'">
+          {{ isFavorito(alimento.id) ? '⭐' : '☆' }}
+        </button>
       </div>
 
       <div *ngIf="alimentosRecomendados.length === 0" class="nenhum">
@@ -108,10 +122,40 @@
       <div *ngFor="let alimento of resultadosPesquisa" class="alimento" (click)="abrirModal(alimento)">
         <img [src]="'http://localhost:3000/' + alimento.imagem" class="fotoalimento">
         <span>{{ alimento.nome }}</span>
+        <button class="btn-favoritar" 
+          [class.favorito]="isFavorito(alimento.id)"
+          (click)="isFavorito(alimento.id) ? deletarFavorito(obterIdFavorito(alimento.id)!, alimento.nome) : adicionarFavorito(alimento); $event.stopPropagation()"
+          [title]="isFavorito(alimento.id) ? 'Remover dos favoritos' : 'Adicionar aos favoritos'">
+          {{ isFavorito(alimento.id) ? '⭐' : '☆' }}
+        </button>
       </div>
 
       <div *ngIf="resultadosPesquisa.length === 0" class="nenhum">
         Nenhum resultado encontrado.
+      </div>
+    </div>
+  </div>
+
+  <!-- FAVORITOS -->
+  <div *ngIf="modoFavoritos" class="alimentos-container">
+    <div class="header">
+      <h1>Meus Favoritos</h1>
+      <button class="voltar" (click)="voltar()">Voltar</button>
+    </div>
+
+    <div class="lista" id="secao-alimentos">
+      <div *ngFor="let favorito of favoritos" class="alimento" (click)="abrirModal(converterFavoritoParaAlimento(favorito))">
+        <img [src]="'http://localhost:3000/' + favorito.imagem" class="fotoalimento">
+        <span>{{ favorito.nome }}</span>
+        <button class="btn-favoritar favorito" 
+          (click)="deletarFavorito(favorito.id, favorito.nome); $event.stopPropagation()"
+          title="Remover dos favoritos">
+          ⭐
+        </button>
+      </div>
+
+      <div *ngIf="favoritos.length === 0" class="nenhum">
+        Você ainda não tem favoritos. Adicione seus alimentos preferidos!
       </div>
     </div>
   </div>

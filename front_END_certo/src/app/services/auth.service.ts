@@ -27,11 +27,20 @@ export class AuthService {
                     response.user?.nome_usuario ||
                     response.user?.nome;
 
+      const id = response.id || response.user?.id;
+
       if (nome) {
         localStorage.setItem('usuarioLogado', nome);
         console.log("Usuário salvo no localStorage:", nome);
       } else {
         console.warn("⚠️ Nenhum nome de usuário encontrado na resposta.");
+      }
+
+      if (id) {
+        localStorage.setItem('usuarioId', String(id));
+        console.log("ID do usuário salvo no localStorage:", id);
+      } else {
+        console.warn("⚠️ Nenhum ID de usuário encontrado na resposta.");
       }
     }
   }
@@ -45,6 +54,7 @@ export class AuthService {
     if (!this.isBrowser()) return;
     localStorage.removeItem('token');
     localStorage.removeItem('usuarioLogado');
+    localStorage.removeItem('usuarioId');
   }
 
   deleteUser(password: string): Promise<boolean> {
@@ -56,6 +66,7 @@ export class AuthService {
         if (success) {
           localStorage.removeItem('token');
           localStorage.removeItem('usuarioLogado');
+          localStorage.removeItem('usuarioId');
         }
         resolve(success);
       }, 1000);

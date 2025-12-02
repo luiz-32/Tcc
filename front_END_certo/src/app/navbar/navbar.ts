@@ -13,9 +13,8 @@ export class Navbar {
   @Input() usuarioNome: string | null = null;
   @Output() sairEvent = new EventEmitter<void>();
   @Output() search = new EventEmitter<string>();
-
-  // emite para o componente principal rolar até a seção
   @Output() navigate = new EventEmitter<string>();
+  @Output() favoritosEvent = new EventEmitter<void>();
 
   termo: string = '';
 
@@ -28,6 +27,10 @@ export class Navbar {
 
   sair() {
     this.sairEvent.emit();
+  }
+
+  exibirFavoritos() {
+    this.favoritosEvent.emit();
   }
 
   // apenas emite o ID da seção

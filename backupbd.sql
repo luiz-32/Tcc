@@ -115,8 +115,36 @@ INSERT INTO `usuario` (`id`, `nome_usuario`, `senha`) VALUES
 	(12, 'Mariana', '1234'),
 	(13, 'Maria Clara', '1234');
 
+-- Copiando estrutura para tabela banco_dados.favoritos
+CREATE TABLE IF NOT EXISTS `favoritos` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_usuario` int(11) NOT NULL,
+  `id_alimento` int(11) NOT NULL,
+  `data_criacao` timestamp DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_favorito` (`id_usuario`, `id_alimento`),
+  KEY `id_usuario` (`id_usuario`),
+  KEY `id_alimento` (`id_alimento`),
+  CONSTRAINT `favoritos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `favoritos_ibfk_2` FOREIGN KEY (`id_alimento`) REFERENCES `alimentos` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
+
+CREATE TABLE IF NOT EXISTS `favoritos` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_usuario` int(11) NOT NULL,
+ ` id_alimento` int(11) NOT NULL,
+  `data_criacao` timestamp DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_favorito` (`id_usuario`, `id_alimento`),
+  KEY `id_usuario `(`id_usuario`),
+  KEY `id_alimento` (`id_alimento`),
+  CONSTRAINT `favoritos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario `(id) ON DELETE CASCADE,
+  CONSTRAINT `favoritos_ibfk_2` FOREIGN KEY (`id_alimento`) REFERENCES `alimentos` (id) ON DELETE CASCADE
+);
+

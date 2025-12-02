@@ -48,7 +48,11 @@ export class UsuarioComponent {
         // Salva no localStorage (simulando login automático)
         const usuario = res.nome_usuario || this.nome_usuario;
         const tokenFake = res.token || 'cadastroTokenFake'; // Caso o backend ainda não gere token
-        this.auth.login({ token: tokenFake, nome_usuario: usuario });
+        // Se o backend retornou o id do usuário, inclua-o para que o AuthService salve `usuarioId`
+        const payload: any = { token: tokenFake, nome_usuario: usuario };
+        if (res.id) payload.id = res.id;
+        if (res.user && res.user.id) payload.user = res.user;
+        this.auth.login(payload);
 
         // Redireciona para a tela principal após 2 segundos
         setTimeout(() => {

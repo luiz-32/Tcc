@@ -58,6 +58,8 @@
           Olá, {{ usuarioNome || 'Desconhecido' }}
         </span>
         <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" (click)="exibirFavoritos()">⭐ Meus Favoritos</a></li>
+        <li><hr class="dropdown-divider"></li>
         <li><a class="dropdown-item" (click)="sair()">🚪 Sair</a></li>
       </ul>
     </div>
