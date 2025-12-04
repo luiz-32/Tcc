@@ -19,6 +19,9 @@
   font-family: 'Poppins', sans-serif;
 }
 
+/* Smooth transitions when navigating between sections */
+/* Keep layout stable; smooth scrolling handled by JS only */
+
 /* ====== HOME ====== */
 .home-container {
   width: 100%;
@@ -722,5 +725,44 @@
   .modal-foto {
     width: 200px;
     height: 200px;
+  }
+}
+
+/* Page sections fade in */
+.home-container, .alimentos-container, .lista, .carrossel-container {
+  transition: opacity 260ms ease, transform 260ms ease;
+}
+
+.fade-in {
+  opacity: 1;
+  transform: none;
+}
+
+.fade-out {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+/* Staggered card entry for alimentos and category cards */
+.lista .alimento,
+.carrossel-lista .card-alimento {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: cardFadeUp 420ms ease forwards;
+}
+
+.lista .alimento:nth-child(1), .carrossel-lista .card-alimento:nth-child(1) { animation-delay: 40ms; }
+.lista .alimento:nth-child(2), .carrossel-lista .card-alimento:nth-child(2) { animation-delay: 80ms; }
+.lista .alimento:nth-child(3), .carrossel-lista .card-alimento:nth-child(3) { animation-delay: 120ms; }
+.lista .alimento:nth-child(4), .carrossel-lista .card-alimento:nth-child(4) { animation-delay: 160ms; }
+.lista .alimento:nth-child(5), .carrossel-lista .card-alimento:nth-child(5) { animation-delay: 200ms; }
+.lista .alimento:nth-child(6), .carrossel-lista .card-alimento:nth-child(6) { animation-delay: 240ms; }
+.lista .alimento:nth-child(7), .carrossel-lista .card-alimento:nth-child(7) { animation-delay: 280ms; }
+.lista .alimento:nth-child(8), .carrossel-lista .card-alimento:nth-child(8) { animation-delay: 320ms; }
+
+@keyframes cardFadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

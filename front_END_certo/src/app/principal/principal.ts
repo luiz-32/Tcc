@@ -3,19 +3,24 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { Navbar } from '../navbar/navbar';
+import { ToastComponent } from '../toast/toast';
 import { AuthService } from '../services/auth.service';
 import { AlimentosService, Alimento } from '../services/alimentos.service';
 import { FavoritosService, Favorito } from '../services/favoritos.service';
+import { ToastService } from '../services/toast.service';
 
 @Component({
   selector: 'app-principal',
   standalone: true,
   templateUrl: './principal.html',
   styleUrls: ['./principal.css'],
-  imports: [CommonModule, HttpClientModule, Navbar]
+  imports: [CommonModule, HttpClientModule, Navbar, ToastComponent]
 })
 export class PrincipalComponent implements OnInit {
   @ViewChild(Navbar) navbar!: Navbar;
+
+  // Track which navbar section is active for underline/highlight
+  activeSection: string | null = 'home';
 
   usuarioNome: string | null = null;
   usuarioId: number | null = null;
@@ -45,11 +50,77 @@ export class PrincipalComponent implements OnInit {
     private router: Router,
     private alimentosService: AlimentosService,
     private favoritosService: FavoritosService
+    , private toast: ToastService
   ) {}
 
+  // Handlers for profile actions emitted by Navbar
+  onUploadPhoto(file: File) {
+    // Placeholder: upload to server if endpoint exists. For now show toast.
+    console.log('[onUploadPhoto] file:', file);
+    this.toast.show('Foto enviada (simulada).', 'success');
+  }
+
+  onChangeName(newName: string) {
+    this.toast.show('Alterando nome...', 'info');
+    this.auth.changeUsername(newName).then(success => {
+      if (success) {
+        this.usuarioNome = newName;
+        this.toast.show('Nome alterado com sucesso.', 'success');
+        alert('Nome alterado com sucesso.');
+      } else {
+        this.toast.show('Falha ao alterar nome.', 'error');
+        alert('Falha ao alterar nome. Veja o console para detalhes.');
+      }
+    });
+  }
+
+  onChangePassword(payload: { oldPassword: string; newPassword: string }) {
+    this.toast.show('Alterando senha...', 'info');
+    this.auth.changePassword(payload.oldPassword, payload.newPassword).then(success => {
+      if (success) {
+        this.toast.show('Senha alterada com sucesso.', 'success');
+        alert('Senha alterada com sucesso.');
+      } else {
+        this.toast.show('Falha ao alterar senha.', 'error');
+        alert('Falha ao alterar senha. Verifique a senha atual.');
+      }
+    });
+  }
+
+  onDeleteAccount(password: string) {
+    this.toast.show('Excluindo conta...', 'info');
+    this.auth.deleteUser(password).then(success => {
+      if (success) {
+        this.toast.show('Conta excluída.', 'success');
+        // Clear UI state
+        this.usuarioNome = null;
+        this.usuarioId = null;
+        this.favoritos = [];
+        this.router.navigate(['/principal']);
+        alert('Conta excluída com sucesso.');
+      } else {
+        this.toast.show('Falha ao excluir conta. Senha incorreta?', 'error');
+        alert('Falha ao excluir conta. Senha incorreta?');
+      }
+    });
+  }
+
+  goToPerfil() {
+    // Navigate to the perfil page
+    this.router.navigate(['/perfil']);
+  }
+
   ngOnInit(): void {
-    this.usuarioNome = localStorage.getItem('usuarioLogado');
-    this.usuarioId = Number(localStorage.getItem('usuarioId'));
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        this.usuarioNome = localStorage.getItem('usuarioLogado');
+        this.usuarioId = Number(localStorage.getItem('usuarioId')) || null;
+      }
+    } catch (e) {
+      // ambiente sem localStorage (SSR) — não faz nada
+      this.usuarioNome = null;
+      this.usuarioId = null;
+    }
     this.carregarAlimentos();
     this.carregarCategoriasComAlimentos();
     
@@ -58,6 +129,14 @@ export class PrincipalComponent implements OnInit {
       console.log('[ngOnInit] Carregando favoritos do servidor para usuário', this.usuarioId);
       this.carregarFavoritosDoServidor();
     }
+  }
+
+  goToLogin(): void {
+    this.router.navigate(['/login']);
+  }
+
+  goToCadastro(): void {
+    this.router.navigate(['/cadastro']);
   }
 
   private removerDuplicados(lista: Alimento[]): Alimento[] {
@@ -245,6 +324,11 @@ pesquisarAlimentos(termo: string): void {
   }
 
   abrirModal(alimento: Alimento): void {
+    if (!this.usuarioId) {
+      this.solicitarLoginCadastro();
+      return;
+    }
+
     this.alimentoSelecionado = alimento;
   }
 
@@ -330,7 +414,9 @@ pesquisarAlimentos(termo: string): void {
 
   adicionarFavorito(alimento: Alimento): void {
     if (!this.usuarioId) {
-      console.warn("Usuário não está logado");
+      // Se não estiver logado, redirecionar para a tela inicial conforme solicitado
+      console.warn("Usuário não está logado — redirecionando para /inicial");
+      this.router.navigate(['/inicial']);
       return;
     }
 
@@ -369,7 +455,9 @@ pesquisarAlimentos(termo: string): void {
     console.log(`[onToggleFavorito] CLICADO - usuarioId=${this.usuarioId}, alimentoId=${alimentoId}, isFavorito=${this.isFavorito(alimentoId ?? -1)}`);
 
     if (!this.usuarioId) {
-      console.warn("Usuário não está logado");
+      // Se não estiver logado, redirecionar para a tela inicial
+      console.warn('Usuário não está logado — redirecionando para /inicial');
+      this.router.navigate(['/inicial']);
       return;
     }
 
@@ -386,39 +474,11 @@ pesquisarAlimentos(termo: string): void {
     this.loadingFavorito[alimentoId] = true;
 
     if (this.isFavorito(alimentoId)) {
-      // REMOVER FAVORITO
-      const idFav = this.obterIdFavorito(alimentoId);
-      if (!idFav) {
-        console.warn('ID do favorito não encontrado para remover');
-        this.loadingFavorito[alimentoId] = false;
-        return;
-      }
-
-      console.log(`[onToggleFavorito] Removendo favorito ${idFav}...`);
-      this.favoritosService.deletarFavorito(idFav).subscribe({
-        next: () => {
-          console.log('[onToggleFavorito] DELETE sucesso');
-          // remove locally - NÃO CHAMAR carregarFavoritos()!
-          this.favoritos = this.favoritos.filter(f => f.id !== idFav);
-          console.log('[onToggleFavorito] this.favoritos agora tem', this.favoritos.length, 'items');
-          // Atualiza a exibição imediata quando estivermos no modo "Meus Favoritos"
-          this.atualizarAlimentosFavoritos();
-        },
-        error: (err) => {
-          console.error('[onToggleFavorito] Erro ao remover:', err);
-          this.loadingFavorito[alimentoId] = false;
-        },
-        complete: () => { 
-          console.log('[onToggleFavorito] DELETE completado');
-          this.loadingFavorito[alimentoId] = false; 
-        }
-      });
-    } else {
-      // ADICIONAR FAVORITO
-      console.log(`[onToggleFavorito] Chamando POST para adicionar favorito...`);
+      // INVERTIDO: SE JÁ É FAVORITO -> ADICIONAR (POST)
+      console.log(`[onToggleFavorito] (invertido) Chamando POST para adicionar favorito...`);
       this.favoritosService.adicionarFavorito(Number(this.usuarioId), Number(alimentoId)).subscribe({
         next: (novoFavorito) => {
-          console.log('[onToggleFavorito] POST sucesso:', novoFavorito);
+          console.log('[onToggleFavorito] POST sucesso (invertido):', novoFavorito);
           const f = {
             ...novoFavorito,
             id: Number((novoFavorito as any).id),
@@ -428,19 +488,54 @@ pesquisarAlimentos(termo: string): void {
           // Add locally - NÃO CHAMAR carregarFavoritos()!
           this.favoritos.push(f);
           console.log('[onToggleFavorito] this.favoritos agora tem', this.favoritos.length, 'items');
-          // Atualiza a exibição imediata quando estivermos no modo "Meus Favoritos"
           this.atualizarAlimentosFavoritos();
-          console.log('Favorito adicionado via onToggleFavorito:', f);
         },
         error: (err) => {
-          console.error('[onToggleFavorito] Erro ao adicionar:', err);
+          console.error('[onToggleFavorito] Erro ao adicionar (invertido):', err);
           this.loadingFavorito[alimentoId] = false;
         },
-        complete: () => { 
-          console.log('[onToggleFavorito] POST completado');
-          this.loadingFavorito[alimentoId] = false; 
+        complete: () => {
+          console.log('[onToggleFavorito] POST completado (invertido)');
+          this.loadingFavorito[alimentoId] = false;
         }
       });
+    } else {
+      // INVERTIDO: SE NÃO É FAVORITO -> REMOVER (DELETE)
+      const idFav = this.obterIdFavorito(alimentoId);
+      if (!idFav) {
+        console.warn('ID do favorito não encontrado para remover (invertido)');
+        this.loadingFavorito[alimentoId] = false;
+        return;
+      }
+
+      console.log(`[onToggleFavorito] (invertido) Removendo favorito ${idFav}...`);
+      this.favoritosService.deletarFavorito(idFav).subscribe({
+        next: () => {
+          console.log('[onToggleFavorito] DELETE sucesso (invertido)');
+          // remove locally - NÃO CHAMAR carregarFavoritos()!
+          this.favoritos = this.favoritos.filter(f => f.id !== idFav);
+          console.log('[onToggleFavorito] this.favoritos agora tem', this.favoritos.length, 'items');
+          this.atualizarAlimentosFavoritos();
+        },
+        error: (err) => {
+          console.error('[onToggleFavorito] Erro ao remover (invertido):', err);
+          this.loadingFavorito[alimentoId] = false;
+        },
+        complete: () => {
+          console.log('[onToggleFavorito] DELETE completado (invertido)');
+          this.loadingFavorito[alimentoId] = false;
+        }
+      });
+    }
+  }
+
+  // Prompt helper to suggest login or cadastro when action requires authentication
+  solicitarLoginCadastro(): void {
+    const entrar = confirm('Você precisa estar logado para usar essa funcionalidade.\n\nClique OK para entrar ou Cancel para se cadastrar.');
+    if (entrar) {
+      this.router.navigate(['/login']);
+    } else {
+      this.router.navigate(['/cadastro']);
     }
   }
 
@@ -482,6 +577,11 @@ pesquisarAlimentos(termo: string): void {
   }
 
   exibirFavoritos(): void {
+    if (!this.usuarioId) {
+      this.solicitarLoginCadastro();
+      return;
+    }
+
     this.modoFavoritos = true;
     this.tipoDieta = null;
     this.categoriaSelecionada = null;
@@ -579,12 +679,24 @@ pesquisarAlimentos(termo: string): void {
   }
 
   sair(): void {
+    // Perform logout, clear local UI state and remain on Principal (no user)
     this.auth.logout();
-    this.router.navigate(['/inicial']);
+    this.toast.show('Você saiu da conta', 'info');
+
+    // Clear user-specific state so the principal view shows as logged-out
+    this.usuarioNome = null;
+    this.usuarioId = null;
+    this.favoritos = [];
+    this.modoFavoritos = false;
+    this.alimentosRecomendados = this.todosAlimentos.slice(0, 6);
+
+    // Ensure route is /principal (stay on main screen)
+    this.router.navigate(['/principal']);
   }
 
  scrollTo(id: string) {
-
+  // mark active section for navbar highlighting
+  try { this.activeSection = id; } catch {}
   // 🔥 SE ESTIVER EM FAVORITOS → VOLTA PARA A HOME
   if (this.modoFavoritos) {
     this.modoFavoritos = false;
@@ -598,21 +710,15 @@ pesquisarAlimentos(termo: string): void {
   // 🔹 Recarregar o conteúdo da HOME
   this.alimentosRecomendados = this.todosAlimentos.slice(0, 6);
 
-  setTimeout(() => {
-    const elemento = document.getElementById(id);
-    if (!elemento) return;
+  // Perform smooth scroll only — no additional fade/translate
+  const elemento = document.getElementById(id);
+  if (!elemento) return;
 
-    const navbar = document.querySelector('nav');
-    const navbarHeight = navbar ? (navbar as HTMLElement).offsetHeight : 80;
+  const navbar = document.querySelector('nav');
+  const navbarHeight = navbar ? (navbar as HTMLElement).offsetHeight : 80;
 
-    const posicaoTop =
-      elemento.getBoundingClientRect().top + window.scrollY - navbarHeight;
-
-    window.scrollTo({
-      top: posicaoTop,
-      behavior: 'smooth'
-    });
-  }, 100);
+  const posicaoTop = elemento.getBoundingClientRect().top + window.scrollY - navbarHeight;
+  window.scrollTo({ top: posicaoTop, behavior: 'smooth' });
 }
 
 

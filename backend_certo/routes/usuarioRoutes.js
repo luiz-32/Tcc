@@ -7,5 +7,6 @@ router.post("/usuario", usuarioController.cadastrarUsuario);
 router.post("/login", usuarioController.loginUsuario);
 router.get("/usuario", usuarioController.listarUsuarios);
 router.delete("/usuario/:id", usuarioController.excluirUsuario);
+router.put("/usuario/:id", usuarioController.atualizarUsuario);
 
 module.exports = router;

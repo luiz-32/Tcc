@@ -1,0 +1,48 @@
+<div class="perfil-container">
+  <a class="seta-voltar" href="/principal">← Voltar</a>
+
+  <div class="perfil-box">
+    <h1>Meu Perfil</h1>
+
+    <div class="campo">
+      <label>Nome de usuário</label>
+      <input type="text" [(ngModel)]="novoNome" name="novoNome" />
+      <button class="btn" (click)="changeName()">Salvar Nome</button>
+    </div>
+
+    <div class="campo">
+      <label>Email</label>
+      <input type="email" [value]="email || ''" disabled />
+    </div>
+
+    <div class="campo">
+      <label>Foto de Perfil</label>
+      <input type="file" accept="image/*" (change)="pickFile($event)" />
+      <small *ngIf="selectedFileName">{{ selectedFileName }}</small>
+    </div>
+
+    <hr />
+
+    <div class="campo">
+      <label>Senha Atual</label>
+      <input type="password" [(ngModel)]="oldPassword" name="oldPassword" />
+    </div>
+
+    <div class="campo">
+      <label>Nova Senha</label>
+      <input type="password" [(ngModel)]="newPassword" name="newPassword" />
+    </div>
+
+    <div class="campo">
+      <label>Confirmar Nova Senha</label>
+      <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" />
+      <button class="btn" (click)="changePassword()">Alterar Senha</button>
+    </div>
+
+    <hr />
+
+    <div class="campo text-center">
+      <button class="btn-danger" (click)="deleteAccount()">Excluir Conta</button>
+    </div>
+  </div>
+</div>

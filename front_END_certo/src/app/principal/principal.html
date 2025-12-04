@@ -2,18 +2,33 @@
 <div class="principal-container" id="home">
   <app-navbar 
     [usuarioNome]="usuarioNome"
+    [activeSection]="activeSection"
+    [usuarioId]="usuarioId"
     (sairEvent)="sair()"
     (search)="pesquisarAlimentos($event)"
     (navigate)="scrollTo($event)"
-    (favoritosEvent)="exibirFavoritos()">
+    (favoritosEvent)="exibirFavoritos()"
+    (uploadPhoto)="onUploadPhoto($event)"
+    (changeName)="onChangeName($event)"
+    (changePassword)="onChangePassword($event)"
+    (deleteAccount)="onDeleteAccount($event)"
+    (openProfilePage)="goToPerfil()"
+    (loginEvent)="goToLogin()"
+    (cadastroEvent)="goToCadastro()">
   </app-navbar>
+
+  <!-- Componente de toasts -->
+  <app-toast></app-toast>
+
+  <!-- BANNER DE LOGIN / CADASTRO PARA USUÁRIOS NÃO AUTENTICADOS -->
 
   <!-- HOME (RESTAURADO: *ngIf original para trocar DOM) -->
   <div *ngIf="!modoPesquisa && !tipoDieta && !categoriaSelecionada && !modoFavoritos" class="home-container">
     <!-- CAPA -->
     <div class="carrosel-unico">
       <img src="foto/capa.jpg" alt="Capa" class="carrosel-img">
-      <h1 class="bemvindo">BEM-VINDO(A), {{ usuarioNome || 'USUÁRIO' }}!</h1>
+      <!-- Mostrar apenas o nome do usuário quando logado -->
+      <h1 class="bemvindo" *ngIf="usuarioNome">BEM-VINDO(A), {{ usuarioNome }}</h1>
     </div>
 
     <!-- BOTÃO DE FAVORITOS -->

@@ -1,12 +1,26 @@
 <!-- src/app/usuario/usuario.html (versão ajustada para o novo CSS) -->
 <div class="cadastro-container">
   <!-- Seta de voltar (opcional: redireciona para login) -->
-  <a class="seta-voltar" href="/inicial">&larr;</a>
+  <a class="seta-voltar" href="/principal">&larr;</a>
   
   <div class="cadastro-box">
     <h1>CADASTRO</h1> <!-- Ou "Cadastro de Usuário" se preferir -->
     
     <form (ngSubmit)="fazerCadastro()" #cadastroForm="ngForm">
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          [(ngModel)]="email"
+          required
+          placeholder="Digite seu email"
+        />
+        <div *ngIf="cadastroForm.controls['email']?.invalid && cadastroForm.controls['email']?.touched" class="erro-validacao">
+          Informe um email válido.
+        </div>
+      </div>
       <div class="form-group"> <!-- Mantive para agrupar, mas o CSS agora estiliza via .cadastro-box -->
         <label for="nome_usuario">Nome de Usuário:</label>
         <input 
@@ -17,7 +31,7 @@
           required 
           minlength="3"
           placeholder="Digite um nome de usuário (mín. 3 caracteres)"
-        >
+        />
         <div *ngIf="cadastroForm.controls['nome_usuario']?.invalid && cadastroForm.controls['nome_usuario']?.touched" class="erro-validacao">
           Nome de usuário deve ter pelo menos 3 caracteres.
         </div>

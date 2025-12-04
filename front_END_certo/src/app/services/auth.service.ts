@@ -1,13 +1,16 @@
 import { Injectable, Inject } from '@angular/core';
 import { PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private apiUrl = 'http://localhost:3000';
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private http: HttpClient) {}
 
   private isBrowser(): boolean {
     return isPlatformBrowser(this.platformId);
@@ -56,41 +59,53 @@ export class AuthService {
     localStorage.removeItem('usuarioLogado');
     localStorage.removeItem('usuarioId');
   }
-
   deleteUser(password: string): Promise<boolean> {
     if (!this.isBrowser()) return Promise.resolve(false);
-    
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const success = Math.random() > 0.5;
-        if (success) {
-          localStorage.removeItem('token');
-          localStorage.removeItem('usuarioLogado');
-          localStorage.removeItem('usuarioId');
-        }
-        resolve(success);
-      }, 1000);
+
+    const id = Number(localStorage.getItem('usuarioId')) || null;
+    if (!id) return Promise.resolve(false);
+
+    return lastValueFrom(this.http.delete(`${this.apiUrl}/usuario/${id}`, { body: { senha: password } })).then((res: any) => {
+      // On success, clear local storage
+      localStorage.removeItem('token');
+      localStorage.removeItem('usuarioLogado');
+      localStorage.removeItem('usuarioId');
+      return true;
+    }).catch(err => {
+      console.error('deleteUser error', err);
+      return false;
     });
   }
 
   changeUsername(newUsername: string): Promise<boolean> {
     if (!this.isBrowser()) return Promise.resolve(false);
+    const id = Number(localStorage.getItem('usuarioId')) || null;
+    if (!id) return Promise.resolve(false);
 
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const success = Math.random() > 0.5;
-        if (success) {
-          localStorage.setItem('usuarioLogado', newUsername);
-        }
-        resolve(success);
-      }, 1000);
+    return lastValueFrom(this.http.put(`${this.apiUrl}/usuario/${id}`, { nome_usuario: newUsername })).then((res: any) => {
+      // Update localStorage on success
+      if (res && (res.nome_usuario || res.nome)) {
+        localStorage.setItem('usuarioLogado', res.nome_usuario || res.nome);
+      } else {
+        localStorage.setItem('usuarioLogado', newUsername);
+      }
+      return true;
+    }).catch(err => {
+      console.error('changeUsername error', err);
+      return false;
     });
   }
 
   changePassword(oldPassword: string, newPassword: string): Promise<boolean> {
-    console.log('Executando changePassword');
-    return new Promise((resolve) => {
-      setTimeout(() => resolve(Math.random() > 0.5), 1000);
+    if (!this.isBrowser()) return Promise.resolve(false);
+    const id = Number(localStorage.getItem('usuarioId')) || null;
+    if (!id) return Promise.resolve(false);
+
+    return lastValueFrom(this.http.put(`${this.apiUrl}/usuario/${id}`, { senha_atual: oldPassword, nova_senha: newPassword })).then(res => {
+      return true;
+    }).catch(err => {
+      console.error('changePassword error', err);
+      return false;
     });
   }
 }

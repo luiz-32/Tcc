@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
+import { ToastService } from '../services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./login.css']
 })
 export class LoginComponent {
-  nome_usuario: string = '';
+  email: string = '';
   senha: string = '';
   mensagem: string = '';
 
@@ -21,7 +22,7 @@ export class LoginComponent {
     private http: HttpClient,
     private auth: AuthService,
     private router: Router,
-  
+    private toast: ToastService
   ) {}
 
   ngOnInit(){
@@ -33,16 +34,19 @@ export class LoginComponent {
 
   fazerLogin() {
     this.http.post<any>('http://localhost:3000/login', {
-      nome_usuario: this.nome_usuario,
+      email: this.email,
       senha: this.senha
     }).subscribe({
       next: (res) => {
         this.auth.login(res);
         this.mensagem = '';
+        this.toast.show('Login efetuado com sucesso', 'success');
+        alert('Login efetuado com sucesso');
         this.router.navigate(['/principal']);
       },
       error: (err) => {
         this.mensagem = err.error?.erro || 'Credenciais inválidas';
+        alert('Falha no login: ' + (this.mensagem || 'Ver console')); 
         console.error('Erro no login:', err);
       }
     });

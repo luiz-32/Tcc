@@ -1,0 +1,8 @@
+<div class="toast-container" aria-live="polite" aria-atomic="true">
+  <div *ngFor="let t of toasts" class="toast" [ngClass]="t.type">
+    <div class="toast-body">
+      <span class="toast-text">{{ t.text }}</span>
+      <button class="toast-close" (click)="close(t.id)">✕</button>
+    </div>
+  </div>
+</div>

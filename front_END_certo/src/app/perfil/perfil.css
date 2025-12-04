@@ -1,0 +1,21 @@
+.perfil-container {
+  max-width: 900px;
+  margin: 100px auto;
+  padding: 20px;
+}
+
+.perfil-box {
+  background: #fff;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+}
+
+.perfil-box h1 { color: #002a91; margin-bottom: 20px; }
+.campo { margin-bottom: 16px; display:flex; gap:12px; align-items:center }
+.campo label { width: 160px; font-weight:700; color:#333 }
+.campo input[type="text"], .campo input[type="email"], .campo input[type="password"] { flex:1; padding:8px 12px; border-radius:8px; border:1px solid #ddd }
+.campo .btn { background:#00bf63; color:white; border:none; padding:8px 12px; border-radius:8px }
+.btn-danger { background:#dc3545; color:white; border:none; padding:10px 14px; border-radius:10px }
+
+.seta-voltar { display:inline-block; margin-bottom:12px; color:#002a91; text-decoration:none }

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../services/auth.service'; // ⬅️ Import do serviço de autenticação
+import { ToastService } from '../services/toast.service';
 
 @Component({
   selector: 'app-usuario',
@@ -13,6 +14,7 @@ import { AuthService } from '../services/auth.service'; // ⬅️ Import do serv
   styleUrls: ['./usuario.css']
 })
 export class UsuarioComponent {
+  email: string = '';
   nome_usuario: string = '';
   senha: string = '';
   mensagem: string = '';
@@ -20,8 +22,10 @@ export class UsuarioComponent {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private auth: AuthService // ⬅️ Injetando o AuthService
+    private auth: AuthService, // ⬅️ Injetando o AuthService
+    private toast: ToastService
   ) {}
+
 
   ngOnInit(){
     console.log("Funcionando");
@@ -31,13 +35,14 @@ export class UsuarioComponent {
   }
 
   fazerCadastro() {
-    if (!this.nome_usuario || !this.senha) {
+    if (!this.email || !this.nome_usuario || !this.senha) {
       this.mensagem = 'Preencha todos os campos!';
       return;
     }
 
     // Envia os dados para o backend
     this.http.post<any>('http://localhost:3000/usuario', {
+      email: this.email,
       nome_usuario: this.nome_usuario,
       senha: this.senha
     }).subscribe({
@@ -53,8 +58,10 @@ export class UsuarioComponent {
         if (res.id) payload.id = res.id;
         if (res.user && res.user.id) payload.user = res.user;
         this.auth.login(payload);
+        this.toast.show('Cadastro realizado com sucesso', 'success');
 
-        // Redireciona para a tela principal após 2 segundos
+        // Notify user and redirect
+        alert('Cadastro realizado com sucesso');
         setTimeout(() => {
           this.router.navigate(['/principal']);
         }, 1000);
@@ -62,6 +69,7 @@ export class UsuarioComponent {
       error: (err) => {
         console.error('❌ Erro no cadastro:', err);
         this.mensagem = err.error?.erro || 'Erro ao cadastrar. Tente novamente.';
+        alert('Falha no cadastro: ' + (this.mensagem || 'ver console'));
       }
     });
   }
