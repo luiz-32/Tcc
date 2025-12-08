@@ -27,7 +27,8 @@ export class LoginComponent {
 
   ngOnInit(){
     console.log("Funcionando");
-    if(this.auth.estaLogado()){
+    // Only redirect to principal if we have an authenticated user stored
+    if(this.auth.estaLogado() && localStorage.getItem('usuarioLogado') && localStorage.getItem('usuarioId')){
       this.router.navigate(['/principal']);
     }
   }
@@ -46,8 +47,25 @@ export class LoginComponent {
       },
       error: (err) => {
         this.mensagem = err.error?.erro || 'Credenciais inválidas';
-        alert('Falha no login: ' + (this.mensagem || 'Ver console')); 
-        console.error('Erro no login:', err);
+        console.warn('Usuário não encontrado, tentando login de administrador...', err && err.status);
+
+        // Try admin login as fallback
+        this.http.post<any>('http://localhost:3000/admin/login', {
+          email: this.email,
+          senha: this.senha
+        }).subscribe({
+          next: (adminRes) => {
+            this.auth.login(adminRes);
+            this.toast.show('Login administrador efetuado', 'success');
+            alert('Login administrador efetuado');
+            this.router.navigate(['/admin']);
+          },
+          error: (adminErr) => {
+            this.mensagem = adminErr.error?.erro || this.mensagem || 'Credenciais inválidas';
+            alert('Falha no login: ' + (this.mensagem || 'Ver console'));
+            console.error('Erro no login:', adminErr);
+          }
+        });
       }
     });
   }

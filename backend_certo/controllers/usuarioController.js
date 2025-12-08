@@ -89,21 +89,11 @@ const excluirUsuario = (req, res) => {
   });
 };
 
-module.exports = {
-  cadastrarUsuario,
-  loginUsuario,
-  listarUsuarios,
-  excluirUsuario,
-};
-
-// Expose atualizarUsuario
-module.exports.atualizarUsuario = atualizarUsuario;
-
 // ATUALIZAR USUÁRIO - PUT /usuario/:id
 const atualizarUsuario = (req, res) => {
   console.log('[usuarioController] atualizarUsuario called', { params: req.params, body: req.body });
   const { id } = req.params;
-  const { nome_usuario, senha_atual, nova_senha } = req.body;
+  const { nome_usuario, email, senha_atual, nova_senha } = req.body;
 
   // Se estiver trocando nome de usuário
   const tasks = [];
@@ -118,6 +108,22 @@ const atualizarUsuario = (req, res) => {
         const upd = "UPDATE usuario SET nome_usuario = ? WHERE id = ?";
         connection.query(upd, [nome_usuario, id], (uErr) => {
           if (uErr) return reject({ status: 500, erro: 'Erro ao atualizar nome' });
+          resolve();
+        });
+      });
+    }));
+  }
+
+  // Se estiver trocando email
+  if (email) {
+    tasks.push(new Promise((resolve, reject) => {
+      const checkSql = "SELECT id FROM usuario WHERE email = ? AND id <> ?";
+      connection.query(checkSql, [email, id], (err, results) => {
+        if (err) return reject({ status: 500, erro: 'Erro ao verificar email' });
+        if (results.length > 0) return reject({ status: 409, erro: 'Email já em uso' });
+        const upd = "UPDATE usuario SET email = ? WHERE id = ?";
+        connection.query(upd, [email, id], (uErr) => {
+          if (uErr) return reject({ status: 500, erro: 'Erro ao atualizar email' });
           resolve();
         });
       });
@@ -157,5 +163,39 @@ const atualizarUsuario = (req, res) => {
   }).catch(e => {
     const status = e.status || 500;
     res.status(status).json({ erro: e.erro || 'Erro ao atualizar usuário' });
+  });
+};
+
+// Export all controller functions
+module.exports = {
+  cadastrarUsuario,
+  loginUsuario,
+  listarUsuarios,
+  excluirUsuario,
+  atualizarUsuario
+};
+
+// ATUALIZAR FOTO DE PERFIL - POST /usuario/:id/foto (multipart)
+const atualizarFotoPerfil = (req, res) => {
+  console.log('[usuarioController] atualizarFotoPerfil called', { params: req.params, file: req.file && req.file.path });
+  const { id } = req.params;
+  if (!req.file) return res.status(400).json({ erro: 'Nenhum arquivo enviado' });
+
+  // Normalize path to forward slash for URLs
+  const filePath = (req.file.path || '').replace(/\\/g, '/');
+
+  const sql = 'UPDATE usuario SET foto_perfil = ? WHERE id = ?';
+  connection.query(sql, [filePath, id], (err) => {
+    if (err) {
+      console.error('[atualizarFotoPerfil] Erro ao atualizar DB', err);
+      return res.status(500).json({ erro: 'Erro ao salvar foto de perfil' });
+    }
+
+    const sel = 'SELECT id, email, nome_usuario, foto_perfil FROM usuario WHERE id = ?';
+    connection.query(sel, [id], (sErr, results) => {
+      if (sErr) return res.status(500).json({ erro: 'Erro ao buscar usuário atualizado' });
+      if (!results || results.length === 0) return res.status(404).json({ erro: 'Usuário não encontrado' });
+      res.json(results[0]);
+    });
   });
 };

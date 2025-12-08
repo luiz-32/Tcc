@@ -60,6 +60,21 @@ html {
   background: #fff;
 }
 
+/* Hide native browser clear/search icons so our custom clear button is the only one shown */
+.search-input::-webkit-search-decoration,
+.search-input::-webkit-search-cancel-button,
+.search-input::-webkit-search-results-button,
+.search-input::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+.search-input::-ms-clear,
+.search-input::-ms-reveal {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
 .search-btn {
   position: absolute;
   right: 8px;
@@ -74,6 +89,28 @@ html {
 .search-btn:hover {
   transform: scale(1.15);
 }
+
+/* Clear (x) button inside the search input, appears only when there's text */
+.search-clear {
+  position: absolute;
+  right: 40px; /* sits left of the search button */
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 6px 8px;
+  color: #666;
+  border-radius: 50%;
+  transition: background 0.15s, transform 0.12s, opacity 120ms ease;
+  opacity: 1;
+}
+.search-clear:hover { background: rgba(0,0,0,0.06); transform: scale(1.05); }
+
+/* Hide the clear button on very small screens to avoid overlap */
+@media (max-width: 480px) {
+  .search-clear { display: none }
+}
+
 
 /* ===== DROPDOWN PERFIL ===== */
 .dropdown {

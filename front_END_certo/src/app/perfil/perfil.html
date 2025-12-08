@@ -12,7 +12,7 @@
 
     <div class="campo">
       <label>Email</label>
-      <input type="email" [value]="email || ''" disabled />
+      <input type="email" [(ngModel)]="email" name="email" />
     </div>
 
     <div class="campo">
@@ -37,6 +37,10 @@
       <label>Confirmar Nova Senha</label>
       <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" />
       <button class="btn" (click)="changePassword()">Alterar Senha</button>
+    </div>
+
+    <div class="campo">
+      <button class="btn" (click)="changeName()">Salvar Perfil</button>
     </div>
 
     <hr />

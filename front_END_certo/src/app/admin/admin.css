@@ -1,0 +1,62 @@
+.admin-panel { padding: 16px; }
+.admin-panel h2 { margin-bottom: 12px }
+.admin-panel section { margin-bottom: 16px; border-top: 1px solid #eee; padding-top: 8px }
+
+.admin-header { display:flex; align-items:center; justify-content:space-between; background: linear-gradient(90deg,#6BC96C 0%, #00bf63 100%); padding:12px 16px; border-radius:8px; color: #fff; margin-bottom: 14px }
+.admin-header h2 { margin:0; font-size:1.1rem }
+.admin-actions { display:flex; gap:8px; align-items:center }
+.btn-logout { background:#fff; color:#147a3a; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; font-weight:600 }
+.btn-logout:hover { background:#f0f0f0 }
+
+.admin-panel section h3 { color:#002a91 }
+.admin-panel ul { list-style:none; padding-left:0 }
+.admin-panel li { padding:6px 0; border-bottom:1px dashed #eee }
+
+.panel { margin-bottom: 14px; border: 1px solid #e6e6e6; border-radius: 8px; overflow: hidden; }
+.panel-header { display:flex; align-items:center; justify-content:space-between; padding: 10px 12px; background: #f7f9fb; cursor: pointer }
+.panel-header h3 { margin: 0; font-size: 1rem; color: #147a3a }
+.toggle-btn { background: transparent; border: 1px solid #d0e8d6; color: #147a3a; padding: 6px 10px; border-radius:6px; cursor: pointer }
+.panel-body { padding: 12px; transition: max-height 300ms ease, opacity 300ms ease; max-height: 2000px; opacity: 1 }
+.panel-body.collapsed { max-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0; overflow: hidden }
+.panel-actions { margin-bottom: 8px }
+
+/* Tornar a lista de alimentos do admin rolável quando houver muitos itens */
+.alimentos-list {
+	max-height: calc(60vh);
+	overflow-y: auto;
+	padding-right: 8px; /* espaço para a barra de rolagem sem cobrir conteúdo */
+	-webkit-overflow-scrolling: touch;
+}
+
+/* Estilizar levemente a barra de rolagem para ficar mais visível */
+.alimentos-list::-webkit-scrollbar { width: 10px }
+.alimentos-list::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 8px }
+.alimentos-list::-webkit-scrollbar-track { background: transparent }
+
+.thumb { width:48px; height:48px; object-fit:cover; border-radius:6px; margin-right:10px; border:1px solid #ddd }
+.alimento-row { display:flex; align-items:center }
+.alimento-info { flex:1 }
+.preview { margin-top:8px }
+.alimento-actions { display:flex; gap:6px; margin-left:12px }
+.alimento-actions button { background:#fff; border:1px solid #e0e0e0; padding:6px 8px; border-radius:6px; cursor:pointer }
+
+/* Form styling for criar alimento */
+.criar-form { background: #fff; padding: 16px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); max-width: 820px }
+.criar-form .form-row { display:flex; gap:12px; align-items:center; margin-bottom:12px; }
+.criar-form .form-row label { min-width:120px; font-weight:600; color:#154A2B }
+.criar-form input[type="text"], .criar-form input[type="file"], .criar-form textarea { flex:1; padding:10px 12px; border-radius:8px; border:1px solid #e6eef0; background:#fbfeff }
+.criar-form textarea { resize:vertical }
+.criar-form .file-row { align-items:flex-start }
+.file-input input[type="file"] { padding:6px 0 }
+.preview-thumb { width:72px; height:72px; border-radius:8px; border:1px solid #eee; box-shadow: 0 6px 18px rgba(0,0,0,0.06) }
+.check-row { display:flex; gap:14px; flex-wrap:wrap; padding-left: 124px }
+.check-row label { font-weight:500; color:#333 }
+.form-actions { display:flex; gap:12px; justify-content:flex-end }
+.btn-primary { background: linear-gradient(135deg,#00bf63,#14924a); color:white; border:none; padding:10px 18px; border-radius:10px; cursor:pointer; font-weight:700 }
+.btn-primary:hover { transform:translateY(-2px); box-shadow:0 10px 24px rgba(20,146,74,0.14) }
+.btn-muted { background:#fff; border:1px solid #d6d6d6; padding:10px 16px; border-radius:10px; cursor:pointer }
+
+/* Make admin list items look card-like */
+.panel-body ul.alimentos-list { padding: 8px; display:flex; flex-direction:column; gap:8px }
+.panel-body ul.alimentos-list li { background: #fff; border-radius:10px; padding:10px; box-shadow: 0 8px 20px rgba(0,0,0,0.04); display:block }
+.alimento-row img.thumb { width:56px; height:56px }

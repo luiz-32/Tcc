@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -10,6 +11,9 @@ import { FormsModule } from '@angular/forms';
   imports: [CommonModule, FormsModule]
 })
 export class Navbar {
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
+
+  constructor(private router: Router) {}
   @Input() usuarioNome: string | null = null;
   @Input() activeSection: string | null = null;
   @Input() usuarioId: number | null = null;
@@ -42,6 +46,14 @@ export class Navbar {
     }
   }
 
+  clearSearch(event: Event) {
+    event.preventDefault();
+    this.termo = '';
+    // Emit empty string so PrincipalComponent will call sairPesquisa()
+    this.search.emit('');
+    try { this.searchInput.nativeElement.focus(); } catch {}
+  }
+
   sair() {
     this.sairEvent.emit();
   }
@@ -60,7 +72,8 @@ export class Navbar {
     // If not logged in, intercept and request login/signup
     if (!this.usuarioNome) {
       event.preventDefault();
-      this.loginEvent.emit();
+      // Navigate to the Tela Inicial component when not authenticated
+      this.router.navigate(['/inicial']);
       return;
     }
     // otherwise, let dropdown behave normally

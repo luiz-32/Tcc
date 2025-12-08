@@ -10,9 +10,11 @@
              type="search"
              placeholder="Pesquise por alimentos, categorias, dietas..."
              aria-label="Search"
-             [(ngModel)]="termo"
-             name="searchTerm">
-      <button type="submit" class="search-btn">🔍</button>
+              [(ngModel)]="termo"
+              name="searchTerm"
+              #searchInput>
+      <button type="submit" class="search-btn" title="Pesquisar">🔍</button>
+            <button *ngIf="termo && termo.trim().length > 0" type="button" class="search-clear" title="Limpar pesquisa" (click)="clearSearch($event)">✖</button>
     </form>
 
     <!-- Menu de Navegação -->
@@ -40,8 +42,8 @@
 
     <!-- Entrar / Cadastrar (aparecem à esquerda do perfil quando não logado) -->
     <div *ngIf="!usuarioNome" class="auth-actions">
-      <button class="btn-login-nav" (click)="triggerLogin()">Entrar</button>
-      <button class="btn-cadastro-nav" (click)="triggerCadastro()">Cadastrar</button>
+      <button type="button" class="btn-login-nav" (click)="triggerLogin()">Entrar</button>
+      <button type="button" class="btn-cadastro-nav" (click)="triggerCadastro()">Cadastrar</button>
     </div>
 
     <!-- Perfil -->

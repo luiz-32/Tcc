@@ -47,23 +47,39 @@ export class PerfilComponent implements OnInit {
     if (!input.files || input.files.length === 0) return;
     const f = input.files[0];
     this.selectedFileName = f.name;
-    // For now simulate upload
-    this.toast.show('Foto enviada (simulada).', 'success');
+    this.toast.show('Enviando foto...', 'info');
+    this.auth.uploadProfilePhoto(f).then((res: any) => {
+      this.toast.show('Foto atualizada com sucesso.', 'success');
+      if (res && res.foto_perfil) {
+        localStorage.setItem('usuarioFoto', res.foto_perfil);
+      }
+    }).catch(err => {
+      console.error('Erro ao enviar foto de perfil', err);
+      this.toast.show('Falha ao enviar foto.', 'error');
+    });
   }
 
   changeName() {
-    if (!this.novoNome || this.novoNome.trim().length < 2) {
-      this.toast.show('Nome inválido.', 'error');
+    // Save both name and email using updateProfile
+    const payload: any = {};
+    if (this.novoNome && this.novoNome.trim().length >= 2) payload.nome_usuario = this.novoNome.trim();
+    if (this.email && this.email.trim().length > 3) payload.email = this.email.trim();
+
+    if (!payload.nome_usuario && !payload.email) {
+      this.toast.show('Nada para atualizar.', 'error');
       return;
     }
-    this.toast.show('Alterando nome...', 'info');
-    this.auth.changeUsername(this.novoNome.trim()).then(success => {
-      if (success) {
-        this.usuarioNome = this.novoNome.trim();
-        this.toast.show('Nome alterado com sucesso.', 'success');
-      } else {
-        this.toast.show('Falha ao alterar nome.', 'error');
-      }
+
+    this.toast.show('Salvando perfil...', 'info');
+    this.auth.updateProfile(payload).then(res => {
+      this.usuarioNome = res?.nome_usuario || this.usuarioNome;
+      this.email = res?.email || this.email;
+      this.toast.show('Perfil atualizado com sucesso.', 'success');
+      alert('Perfil atualizado com sucesso.');
+    }).catch(err => {
+      console.error('Erro updateProfile', err);
+      this.toast.show('Falha ao atualizar perfil.', 'error');
+      alert('Falha ao atualizar perfil. Verifique o console.');
     });
   }
 

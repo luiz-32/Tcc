@@ -5,6 +5,7 @@ import { UsuarioComponent } from './usuario/usuario';
 import { TelaInicial } from './tela-inicial/tela-inicial';
 import { PrincipalComponent } from './principal/principal';
 import { PerfilComponent } from './perfil/perfil';
+import { AdminComponent } from './admin/admin';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'principal', pathMatch: 'full' },
@@ -13,4 +14,5 @@ export const routes: Routes = [
   { path: 'cadastro', component: UsuarioComponent },
   { path: 'principal', component: PrincipalComponent },
   { path: 'perfil', component: PerfilComponent }
+  ,{ path: 'admin', component: AdminComponent }
 ];

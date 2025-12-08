@@ -45,6 +45,13 @@ export class AuthService {
       } else {
         console.warn("⚠️ Nenhum ID de usuário encontrado na resposta.");
       }
+
+      // If response indicates admin, store flag
+      if (response.admin) {
+        localStorage.setItem('isAdmin', '1');
+      } else {
+        localStorage.removeItem('isAdmin');
+      }
     }
   }
 
@@ -58,6 +65,12 @@ export class AuthService {
     localStorage.removeItem('token');
     localStorage.removeItem('usuarioLogado');
     localStorage.removeItem('usuarioId');
+    localStorage.removeItem('isAdmin');
+  }
+
+  isAdmin(): boolean {
+    if (!this.isBrowser()) return false;
+    return localStorage.getItem('isAdmin') === '1';
   }
   deleteUser(password: string): Promise<boolean> {
     if (!this.isBrowser()) return Promise.resolve(false);
@@ -106,6 +119,47 @@ export class AuthService {
     }).catch(err => {
       console.error('changePassword error', err);
       return false;
+    });
+  }
+
+  updateProfile(data: { nome_usuario?: string; email?: string }): Promise<any> {
+    if (!this.isBrowser()) return Promise.resolve(false);
+    const id = Number(localStorage.getItem('usuarioId')) || null;
+    if (!id) return Promise.resolve(false);
+
+    return lastValueFrom(this.http.put(`${this.apiUrl}/usuario/${id}`, data)).then((res: any) => {
+      if (res) {
+        if (res.nome_usuario) {
+          localStorage.setItem('usuarioLogado', res.nome_usuario);
+        }
+        if (res.email) {
+          localStorage.setItem('usuarioEmail', res.email);
+        }
+      }
+      return res;
+    }).catch(err => {
+      console.error('updateProfile error', err);
+      throw err;
+    });
+  }
+
+  uploadProfilePhoto(file: File): Promise<any> {
+    if (!this.isBrowser()) return Promise.resolve(null);
+    const id = Number(localStorage.getItem('usuarioId')) || null;
+    if (!id) return Promise.resolve(null);
+
+    const fd = new FormData();
+    fd.append('foto_perfil', file);
+
+    return lastValueFrom(this.http.post(`${this.apiUrl}/usuario/${id}/foto`, fd)).then((res: any) => {
+      if (res && res.foto_perfil) {
+        // Normalize and store URL for client (prefixed later when displaying)
+        localStorage.setItem('usuarioFoto', res.foto_perfil);
+      }
+      return res;
+    }).catch(err => {
+      console.error('uploadProfilePhoto error', err);
+      throw err;
     });
   }
 }

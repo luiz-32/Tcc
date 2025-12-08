@@ -29,7 +29,8 @@ export class UsuarioComponent {
 
   ngOnInit(){
     console.log("Funcionando");
-    if(this.auth.estaLogado()){
+    // Only redirect to principal if we have an authenticated user stored
+    if(this.auth.estaLogado() && localStorage.getItem('usuarioLogado') && localStorage.getItem('usuarioId')){
       this.router.navigate(['/principal']);
     }
   }

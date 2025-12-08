@@ -687,7 +687,11 @@ pesquisarAlimentos(termo: string): void {
     this.usuarioNome = null;
     this.usuarioId = null;
     this.favoritos = [];
+    // Reset any view-specific modes (dieta, categoria, pesquisa, favoritos)
     this.modoFavoritos = false;
+    this.modoPesquisa = false;
+    this.tipoDieta = null;
+    this.categoriaSelecionada = null;
     this.alimentosRecomendados = this.todosAlimentos.slice(0, 6);
 
     // Ensure route is /principal (stay on main screen)
