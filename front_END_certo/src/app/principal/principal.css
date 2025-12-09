@@ -13,7 +13,7 @@
   flex-direction: column;
   align-items: center;
   padding: 0px 20px;
-  padding-top: 65px;
+  padding-top: 20px;
   margin-top: 80px;
   font-family: 'Poppins', sans-serif;
 }
@@ -434,7 +434,8 @@
   min-height: 90vh;
   background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
   color: #002a91;
-  padding: 130px 40px 80px;
+  /* Reduced top padding to bring title/button closer to the top */
+  padding: 15px 40px 80px;
 }
 
 .header {
@@ -465,6 +466,39 @@
   font-size: 1.05rem;
   transition: all 0.3s ease;
   box-shadow: 0 6px 20px rgba(0, 191, 99, 0.3);
+}
+
+/* Keep the Voltar button visible while scrolling the alimentos list.
+   Use a fixed position so it remains in a consistent corner of the viewport
+   while viewing the dieta / alimentos lists. Scoped to `.alimentos-container`
+   to avoid affecting other pages. */
+.alimentos-container .voltar {
+  /* Default: inline within the header flow (right side via flex layout).
+     It becomes fixed when the container has the `voltar-fixed` class. */
+  position: static;
+  z-index: auto;
+}
+
+/* Smooth transition and shrink state */
+.alimentos-container .voltar {
+  transition: transform 180ms ease, padding 180ms ease, font-size 180ms ease, box-shadow 180ms ease;
+}
+
+/* Fixed variant applied by JS when the header scrolls up */
+.alimentos-container.voltar-fixed .voltar {
+  position: fixed;
+  /* place the button below the navbar so it doesn't overlap the header */
+  top: 80px;
+  right: 40px;
+  z-index: 1500; /* below the navbar (2000) so it never sits on top */
+}
+
+/* When scrolled, reduce the button size so it takes less visual space */
+.alimentos-container.voltar-shrink .voltar {
+  transform: scale(0.78);
+  padding: 10px 18px;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 12px rgba(0, 191, 99, 0.22);
 }
 
 .voltar:hover {
@@ -656,7 +690,13 @@
   }
   
   .alimentos-container {
-    padding: 110px 20px 60px;
+    padding: 30px 20px 60px;
+  }
+
+  /* Adjust fixed Voltar button position on medium screens */
+  .alimentos-container.voltar-fixed .voltar {
+    right: 20px;
+    top: 64px;
   }
   
   .header h1 {
@@ -728,6 +768,14 @@
   .modal-foto {
     width: 200px;
     height: 200px;
+  }
+
+  /* Keep fixed voltar button usable on very small screens */
+  .alimentos-container.voltar-fixed .voltar {
+    right: 12px;
+    top: 56px;
+    padding: 10px 18px;
+    font-size: 0.95rem;
   }
 }
 

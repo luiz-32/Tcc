@@ -4,9 +4,10 @@
     [usuarioNome]="usuarioNome"
     [activeSection]="activeSection"
     [usuarioId]="usuarioId"
+    [usuarioFoto]="usuarioFoto"
     (sairEvent)="sair()"
     (search)="pesquisarAlimentos($event)"
-    (navigate)="scrollTo($event)"
+    (navigate)="navigateTo($event)"
     (favoritosEvent)="exibirFavoritos()"
     (uploadPhoto)="onUploadPhoto($event)"
     (changeName)="onChangeName($event)"
@@ -105,7 +106,8 @@
   <div *ngIf="(tipoDieta || categoriaSelecionada) && !modoPesquisa && !modoFavoritos" class="alimentos-container">
     <div class="header">
       <h1>{{ tipoDieta || categoriaSelecionada }}</h1>
-      <button class="voltar" (click)="voltar()">Voltar</button>
+      <!-- Show Voltar only when a dieta is selected (tipoDieta) -->
+      <button *ngIf="tipoDieta" class="voltar" (click)="voltar()">Voltar</button>
     </div>
 
     <div class="lista" id="secao-alimentos">
@@ -130,7 +132,6 @@
   <div *ngIf="modoPesquisa" class="alimentos-container">
     <div class="header">
       <h1>Resultados da Pesquisa</h1>
-      <button class="voltar" (click)="sairPesquisa()">Voltar</button>
     </div>
 
     <div class="lista">
@@ -155,7 +156,6 @@
   <div *ngIf="modoFavoritos" class="alimentos-container">
     <div class="header">
       <h1>Meus Favoritos</h1>
-      <button class="voltar" (click)="voltar()">Voltar</button>
     </div>
 
     <div class="lista" id="secao-alimentos">

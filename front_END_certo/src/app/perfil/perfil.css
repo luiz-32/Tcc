@@ -1,6 +1,6 @@
 .perfil-container {
   max-width: 900px;
-  margin: 100px auto;
+  margin: 30px auto; /* reduced top spacing to bring profile up */
   padding: 20px;
 }
 
@@ -10,6 +10,20 @@
   border-radius: 14px;
   box-shadow: 0 12px 40px rgba(0,0,0,0.06);
 }
+
+.perfil-header-area {
+  display:flex;
+  gap:16px;
+  align-items:center;
+  margin-bottom:18px;
+}
+.header-avatar { flex: 0 0 auto }
+.perfil-img { width:120px; height:120px; object-fit:cover; border-radius:50%; border:4px solid #fff; box-shadow:0 6px 18px rgba(0,0,0,0.12) }
+.perfil-placeholder { width:120px; height:120px; border-radius:50%; background:#f0f0f0; display:flex; align-items:center; justify-content:center; color:#777; font-weight:600 }
+.header-info { flex:1 }
+.header-name { display:block; font-size:20px; margin-bottom:8px }
+.header-actions { display:flex; gap:8px; align-items:center }
+.header-btn { padding:8px 12px; border-radius:8px }
 
 .perfil-box h1 { color: #002a91; margin-bottom: 20px; }
 .campo { margin-bottom: 16px; display:flex; gap:12px; align-items:center }

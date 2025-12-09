@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
@@ -16,7 +16,7 @@ import { ToastService } from '../services/toast.service';
   styleUrls: ['./principal.css'],
   imports: [CommonModule, HttpClientModule, Navbar, ToastComponent]
 })
-export class PrincipalComponent implements OnInit {
+export class PrincipalComponent implements OnInit, OnDestroy {
   @ViewChild(Navbar) navbar!: Navbar;
 
   // Track which navbar section is active for underline/highlight
@@ -24,6 +24,7 @@ export class PrincipalComponent implements OnInit {
 
   usuarioNome: string | null = null;
   usuarioId: number | null = null;
+  usuarioFoto: string | null = null;
   todosAlimentos: Alimento[] = [];
   alimentosRecomendados: Alimento[] = [];
   resultadosPesquisa: Alimento[] = [];
@@ -49,9 +50,14 @@ export class PrincipalComponent implements OnInit {
     private auth: AuthService,
     private router: Router,
     private alimentosService: AlimentosService,
-    private favoritosService: FavoritosService
-    , private toast: ToastService
+    private favoritosService: FavoritosService,
+    private toast: ToastService,
+    private ngZone: NgZone
   ) {}
+
+  private _onScrollBound = this.onScroll.bind(this);
+  private _onResizeBound = this.onResize.bind(this);
+  private _scrollTimer: any = null;
 
   // Handlers for profile actions emitted by Navbar
   onUploadPhoto(file: File) {
@@ -129,6 +135,196 @@ export class PrincipalComponent implements OnInit {
       console.log('[ngOnInit] Carregando favoritos do servidor para usuário', this.usuarioId);
       this.carregarFavoritosDoServidor();
     }
+
+    // Load profile photo for navbar
+    this.loadProfileForNavbar();
+
+    // Listen for auth-change events (login/logout/photo changes)
+    try { window.addEventListener('auth-change', () => this.loadProfileForNavbar()); } catch (e) {}
+    // Listen for page scroll to update active navbar section
+    try { window.addEventListener('scroll', this._onScrollBound); } catch (e) {}
+    // Listen for resize to recompute button offset when fixed
+    try { window.addEventListener('resize', this._onResizeBound); } catch (e) {}
+    // ensure layout accounts for navbar height
+    try { this.updateLayoutForNavbar(); } catch (e) {}
+    // Also listen on the main container in case the app uses a scrolling div
+    try {
+      const main = document.querySelector('.principal-container') as HTMLElement | null;
+      if (main) {
+        main.addEventListener('scroll', this._onScrollBound);
+      }
+    } catch (e) {}
+  }
+
+  ngOnDestroy(): void {
+    try { window.removeEventListener('scroll', this._onScrollBound); } catch (e) {}
+    try { window.removeEventListener('resize', this._onResizeBound); } catch (e) {}
+    try {
+      const main = document.querySelector('.principal-container') as HTMLElement | null;
+      if (main) {
+        main.removeEventListener('scroll', this._onScrollBound);
+      }
+    } catch (e) {}
+  }
+
+  private onScroll(): void {
+    // debounce actual computation to ~80ms
+    try {
+      if (this._scrollTimer) clearTimeout(this._scrollTimer);
+      this._scrollTimer = setTimeout(() => {
+        try {
+          const navbar = document.querySelector('nav');
+          const navbarHeight = navbar ? (navbar as HTMLElement).offsetHeight : 80;
+          const offset = navbarHeight + 8; // small buffer
+
+          const ids = ['home', 'sobre', 'categorias', 'dietas', 'secao-alimentos'];
+          const candidates: { id: string; top: number }[] = [];
+          for (const id of ids) {
+            const el = document.getElementById(id);
+            if (!el) continue;
+            const rect = el.getBoundingClientRect();
+            candidates.push({ id, top: rect.top });
+          }
+
+          let chosen: string | null = null;
+          let bestTop = -Infinity;
+          for (const c of candidates) {
+            if (c.top <= offset && c.top > bestTop) {
+              bestTop = c.top;
+              chosen = c.id;
+            }
+          }
+
+          if (!chosen && candidates.length > 0) {
+            let minDist = Infinity;
+            for (const c of candidates) {
+              const d = Math.abs(c.top - offset);
+              if (d < minDist) {
+                minDist = d;
+                chosen = c.id;
+              }
+            }
+          }
+
+          if (chosen) {
+            let mapped = chosen;
+            if (chosen === 'secao-alimentos') mapped = this.categoriaSelecionada ? 'categorias' : (this.tipoDieta ? 'dietas' : 'categorias');
+            // debug log to help diagnose in browser console
+            // dispatch section-change for navbar to react
+            try { window.dispatchEvent(new CustomEvent('section-change', { detail: { chosen, mapped, ts: Date.now() } })); } catch (e) {}
+            try { this.ngZone.run(() => { this.activeSection = mapped; }); } catch (e) { this.activeSection = mapped; }
+          }
+
+          // Shrink the fixed "Voltar" button when the header scrolls under the navbar
+          try {
+            const alimentos = document.querySelector('.alimentos-container') as HTMLElement | null;
+            if (alimentos) {
+              const headerEl = alimentos.querySelector('.header') as HTMLElement | null;
+              const navbarEl = document.querySelector('nav') as HTMLElement | null;
+              const navbarHeight = navbarEl ? navbarEl.offsetHeight : 80;
+              if (headerEl) {
+                const rect = headerEl.getBoundingClientRect();
+                const shrinkThreshold = navbarHeight + 24; // when header top goes above this, shrink
+                if (rect.top < shrinkThreshold) {
+                  // Header scrolled up: make the button fixed and shrink it
+                  alimentos.classList.add('voltar-fixed');
+                  alimentos.classList.add('voltar-shrink');
+                    // ensure the fixed button is positioned below the navbar
+                    try { this.updateVoltarTop(); } catch (e) {}
+                } else {
+                  // Header visible: keep the button inline on the header
+                  alimentos.classList.remove('voltar-fixed');
+                  alimentos.classList.remove('voltar-shrink');
+                    // remove any inline top to restore inline flow
+                    try { this.updateVoltarTop(); } catch (e) {}
+                }
+              }
+            }
+          } catch (e) {}
+        } catch (e) {}
+      }, 80);
+    } catch (e) {}
+  }
+
+  private onResize(): void {
+    try {
+      this.updateVoltarTop();
+      this.updateLayoutForNavbar();
+    } catch (e) {}
+  }
+
+  private updateVoltarTop(): void {
+    try {
+      const alimentos = document.querySelector('.alimentos-container') as HTMLElement | null;
+      if (!alimentos) return;
+      const voltarBtn = alimentos.querySelector('.voltar') as HTMLElement | null;
+      if (!voltarBtn) return;
+      const navbarEl = document.querySelector('nav') as HTMLElement | null;
+      const navbarHeight = navbarEl ? navbarEl.offsetHeight : 80;
+      if (alimentos.classList.contains('voltar-fixed')) {
+        // place a bit below the navbar so it doesn't overlap
+        const offset = navbarHeight + 8;
+        voltarBtn.style.top = `${offset}px`;
+        // ensure it's positioned fixed (CSS class already does, but inline top ensures correct offset)
+        voltarBtn.style.position = 'fixed';
+        // make sure it appears below the navbar by setting z-index lower than navbar if navbar has high z
+        // (we prefer to keep the button visible, but not on top of the navbar)
+      } else {
+        // restore inline flow
+        voltarBtn.style.removeProperty('top');
+        voltarBtn.style.removeProperty('position');
+      }
+    } catch (e) {}
+  }
+
+  private updateLayoutForNavbar(): void {
+    try {
+      const navbarEl = document.querySelector('nav') as HTMLElement | null;
+      const navbarHeight = navbarEl ? navbarEl.offsetHeight : 80;
+      // set top margin on principal container so content is not hidden under the fixed navbar
+      const principal = document.querySelector('.principal-container') as HTMLElement | null;
+      if (principal) {
+        principal.style.marginTop = `${navbarHeight}px`;
+      }
+      // also set the html scroll-padding-top to help anchor scrolling
+      try { document.documentElement.style.setProperty('scroll-padding-top', `${navbarHeight}px`); } catch (e) {}
+    } catch (e) {}
+  }
+
+  // Scroll the top of the main content (below the fixed navbar)
+  private scrollToTopContent(delay: number = 0): void {
+    try {
+      setTimeout(() => {
+        const navbar = document.querySelector('nav') as HTMLElement | null;
+        const navbarHeight = navbar ? navbar.offsetHeight : 80;
+        const principal = document.querySelector('.principal-container') as HTMLElement | null;
+        const top = principal ? (principal.getBoundingClientRect().top + window.scrollY - navbarHeight) : 0;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }, delay);
+    } catch (e) {}
+  }
+
+  private loadProfileForNavbar() {
+    try {
+      // Try to read cached foto first
+      const cached = localStorage.getItem('usuarioFoto');
+      const cachedId = Number(localStorage.getItem('usuarioFotoId')) || null;
+      // Use cached only when it belongs to the currently logged user
+      if (cached && this.usuarioId && cachedId === this.usuarioId) {
+        this.usuarioFoto = cached;
+        return;
+      }
+      // Otherwise fetch from server if logged in
+      if (this.usuarioId) {
+        this.auth.getProfile().then((res: any) => {
+          this.usuarioFoto = (res && res.foto_perfil) ? res.foto_perfil : null;
+        }).catch(() => {
+          this.usuarioFoto = null;
+        });
+      } else {
+        this.usuarioFoto = null;
+      }
+    } catch (e) { this.usuarioFoto = null; }
   }
 
   goToLogin(): void {
@@ -211,8 +407,8 @@ export class PrincipalComponent implements OnInit {
       next: alimentos => {
         this.alimentosRecomendados = this.removerDuplicados(alimentos);
 
-        // 🔥 SCROLL AUTOMÁTICO PARA O TOPO DA SEÇÃO
-        setTimeout(() => this.scrollTo("secao-alimentos"), 80);
+        // 🔥 SCROLL AUTOMÁTICO PARA OTOPO DO CONTEÚDO (espero o render)
+        setTimeout(() => this.scrollToTopContent(), 160);
       }
     });
   }
@@ -242,10 +438,12 @@ export class PrincipalComponent implements OnInit {
 
     this.alimentosRecomendados = this.removerDuplicados(this.alimentosRecomendados);
 
-    // 🔥 SCROLL AUTOMÁTICO PARA O INÍCIO DA DIETA
+    // 🔥 SCROLL PARA O TOPO DO CONTEÚDO E MARCAR 'DIETAS' COMO ATIVO
     setTimeout(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, 0);
+      this.scrollToTopContent();
+      try { this.activeSection = 'dietas'; } catch (e) {}
+      try { window.dispatchEvent(new CustomEvent('section-change', { detail: { chosen: 'dietas', mapped: 'dietas', ts: Date.now() } })); } catch (e) {}
+    }, 160);
   }
 
 
@@ -376,7 +574,7 @@ pesquisarAlimentos(termo: string): void {
             categoria: f.categoria
           } as Alimento));
           console.log('[carregarFavoritos] alimentosRecomendados agora tem', this.alimentosRecomendados.length, 'items');
-          setTimeout(() => this.scrollTo("secao-alimentos"), 80);
+          setTimeout(() => this.scrollToTopContent(), 160);
         }
       },
       error: erro => {
@@ -629,8 +827,8 @@ pesquisarAlimentos(termo: string): void {
 
         console.log('[exibirFavoritos] alimentosRecomendados agora tem', this.alimentosRecomendados.length, 'items');
         
-        // Scroll para a seção
-        setTimeout(() => this.scrollTo("secao-alimentos"), 80);
+        // Scroll para o topo do conteúdo (give browser a bit more time so header renders)
+        setTimeout(() => this.scrollToTopContent(), 160);
       },
       error: (err) => {
         if (currentRequest !== this.favoritosRequestId) return;
@@ -675,7 +873,7 @@ pesquisarAlimentos(termo: string): void {
       descricao: f.descricao,
       categoria: f.categoria
     } as Alimento));
-    setTimeout(() => this.scrollTo('secao-alimentos'), 80);
+    setTimeout(() => this.scrollToTopContent(), 80);
   }
 
   sair(): void {
@@ -699,22 +897,10 @@ pesquisarAlimentos(termo: string): void {
   }
 
  scrollTo(id: string) {
-  // mark active section for navbar highlighting
+  // mark active section for navbar highlighting (do not change view modes here)
   try { this.activeSection = id; } catch {}
-  // 🔥 SE ESTIVER EM FAVORITOS → VOLTA PARA A HOME
-  if (this.modoFavoritos) {
-    this.modoFavoritos = false;
-  }
 
-  // 🔹 Sempre sair de modo pesquisa / dieta / categoria antes de rolar
-  this.modoPesquisa = false;
-  this.tipoDieta = null;
-  this.categoriaSelecionada = null;
-
-  // 🔹 Recarregar o conteúdo da HOME
-  this.alimentosRecomendados = this.todosAlimentos.slice(0, 6);
-
-  // Perform smooth scroll only — no additional fade/translate
+  // Perform smooth scroll only — no mode changes here. Callers should manage modes.
   const elemento = document.getElementById(id);
   if (!elemento) return;
 
@@ -724,6 +910,21 @@ pesquisarAlimentos(termo: string): void {
   const posicaoTop = elemento.getBoundingClientRect().top + window.scrollY - navbarHeight;
   window.scrollTo({ top: posicaoTop, behavior: 'smooth' });
 }
+
+  // Wrapper used by navbar navigation: reset view modes and then scroll
+  navigateTo(id: string) {
+    try {
+      // When using navbar links we want to leave special modes (pesquisa, dieta, favoritos)
+      this.modoPesquisa = false;
+      this.tipoDieta = null;
+      this.categoriaSelecionada = null;
+      this.modoFavoritos = false;
+      // restore home recommendations
+      this.alimentosRecomendados = this.todosAlimentos.slice(0, 6);
+      // scroll to section and update navbar highlighting
+      this.scrollTo(id);
+    } catch (e) {}
+  }
 
 
 

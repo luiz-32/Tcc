@@ -1,4 +1,6 @@
 const connection = require('../db'); // Agora a conexão é importada do db.js
+const fs = require('fs');
+const path = require('path');
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = "troque_essa_chave_para_uma_secreta_e_complexa";
 
@@ -166,14 +168,7 @@ const atualizarUsuario = (req, res) => {
   });
 };
 
-// Export all controller functions
-module.exports = {
-  cadastrarUsuario,
-  loginUsuario,
-  listarUsuarios,
-  excluirUsuario,
-  atualizarUsuario
-};
+
 
 // ATUALIZAR FOTO DE PERFIL - POST /usuario/:id/foto (multipart)
 const atualizarFotoPerfil = (req, res) => {
@@ -181,21 +176,98 @@ const atualizarFotoPerfil = (req, res) => {
   const { id } = req.params;
   if (!req.file) return res.status(400).json({ erro: 'Nenhum arquivo enviado' });
 
-  // Normalize path to forward slash for URLs
-  const filePath = (req.file.path || '').replace(/\\/g, '/');
+  // Compute a public-relative path (relative to project root) for serving
+  const absPath = req.file.path || '';
+  const rel = path.relative(path.resolve(__dirname, '..'), absPath).replace(/\\/g, '/');
+  const filePath = rel.startsWith('/') ? rel : `/${rel}`;
 
-  const sql = 'UPDATE usuario SET foto_perfil = ? WHERE id = ?';
-  connection.query(sql, [filePath, id], (err) => {
-    if (err) {
-      console.error('[atualizarFotoPerfil] Erro ao atualizar DB', err);
-      return res.status(500).json({ erro: 'Erro ao salvar foto de perfil' });
+  // First, fetch current foto_perfil to remove old file if exists
+  const selOld = 'SELECT foto_perfil FROM usuario WHERE id = ?';
+  connection.query(selOld, [id], (selErr, selRes) => {
+    if (selErr) {
+      console.error('[atualizarFotoPerfil] Erro ao buscar foto antiga', selErr);
+      // continue anyway
     }
 
-    const sel = 'SELECT id, email, nome_usuario, foto_perfil FROM usuario WHERE id = ?';
-    connection.query(sel, [id], (sErr, results) => {
-      if (sErr) return res.status(500).json({ erro: 'Erro ao buscar usuário atualizado' });
-      if (!results || results.length === 0) return res.status(404).json({ erro: 'Usuário não encontrado' });
-      res.json(results[0]);
+    const oldFoto = selRes && selRes[0] ? selRes[0].foto_perfil : null;
+
+    const sql = 'UPDATE usuario SET foto_perfil = ? WHERE id = ?';
+    connection.query(sql, [filePath, id], (err) => {
+      if (err) {
+        console.error('[atualizarFotoPerfil] Erro ao atualizar DB', err);
+        return res.status(500).json({ erro: 'Erro ao salvar foto de perfil' });
+      }
+
+      // Try to remove old file from disk if it existed and is different
+      if (oldFoto && oldFoto !== filePath) {
+        try {
+          const oldRel = oldFoto.startsWith('/') ? oldFoto.slice(1) : oldFoto;
+          const absOld = path.resolve(__dirname, '..', oldRel);
+          fs.unlink(absOld, (uErr) => {
+            if (uErr && uErr.code !== 'ENOENT') console.warn('[atualizarFotoPerfil] falha ao remover foto antiga', uErr);
+          });
+        } catch (e) {
+          console.warn('[atualizarFotoPerfil] erro ao remover foto antiga (sync)', e);
+        }
+      }
+
+      const sel = 'SELECT id, email, nome_usuario, foto_perfil FROM usuario WHERE id = ?';
+      connection.query(sel, [id], (sErr, results) => {
+        if (sErr) return res.status(500).json({ erro: 'Erro ao buscar usuário atualizado' });
+        if (!results || results.length === 0) return res.status(404).json({ erro: 'Usuário não encontrado' });
+        res.json(results[0]);
+      });
     });
   });
+};
+
+// DELETAR FOTO DE PERFIL - DELETE /usuario/:id/foto
+const deletarFotoPerfil = (req, res) => {
+  const { id } = req.params;
+  const sel = 'SELECT foto_perfil FROM usuario WHERE id = ?';
+  connection.query(sel, [id], (err, results) => {
+    if (err) return res.status(500).json({ erro: 'Erro ao buscar usuário' });
+    if (!results || results.length === 0) return res.status(404).json({ erro: 'Usuário não encontrado' });
+
+    const foto = results[0].foto_perfil;
+    if (!foto) return res.status(400).json({ erro: 'Usuário não possui foto de perfil' });
+
+    const fotoRel = foto.startsWith('/') ? foto.slice(1) : foto;
+    const abs = path.resolve(__dirname, '..', fotoRel);
+    fs.unlink(abs, (uErr) => {
+      if (uErr && uErr.code !== 'ENOENT') {
+        console.warn('[deletarFotoPerfil] falha ao remover arquivo', uErr);
+        // proceed to clear DB anyway
+      }
+
+      const upd = 'UPDATE usuario SET foto_perfil = NULL WHERE id = ?';
+      connection.query(upd, [id], (uErr2) => {
+        if (uErr2) return res.status(500).json({ erro: 'Erro ao atualizar usuário' });
+        return res.json({ mensagem: 'Foto de perfil removida' });
+      });
+    });
+  });
+};
+
+// OBTER USUÁRIO - GET /usuario/:id (retorna foto_perfil também)
+const obterUsuario = (req, res) => {
+  const { id } = req.params;
+  const sel = 'SELECT id, email, nome_usuario, foto_perfil FROM usuario WHERE id = ?';
+  connection.query(sel, [id], (err, results) => {
+    if (err) return res.status(500).json({ erro: 'Erro ao buscar usuário' });
+    if (!results || results.length === 0) return res.status(404).json({ erro: 'Usuário não encontrado' });
+    res.json(results[0]);
+  });
+};
+
+// Export all controller functions
+module.exports = {
+  cadastrarUsuario,
+  loginUsuario,
+  listarUsuarios,
+  excluirUsuario,
+  atualizarUsuario,
+  atualizarFotoPerfil,
+  deletarFotoPerfil,
+  obterUsuario
 };

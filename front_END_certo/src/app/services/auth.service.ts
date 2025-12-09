@@ -41,7 +41,14 @@ export class AuthService {
 
       if (id) {
         localStorage.setItem('usuarioId', String(id));
-        console.log("ID do usuário salvo no localStorage:", id);
+        // Clear any stale photo before retrieving the current user's profile
+        localStorage.removeItem('usuarioFoto');
+        localStorage.removeItem('usuarioFotoId');
+        localStorage.removeItem('usuarioEmail');
+        // Fetch profile once. getProfile now guards against races.
+        this.getProfile().then(() => {
+          try { window.dispatchEvent(new Event('auth-change')); } catch (e) {}
+        }).catch(() => {});
       } else {
         console.warn("⚠️ Nenhum ID de usuário encontrado na resposta.");
       }
@@ -66,6 +73,10 @@ export class AuthService {
     localStorage.removeItem('usuarioLogado');
     localStorage.removeItem('usuarioId');
     localStorage.removeItem('isAdmin');
+    localStorage.removeItem('usuarioFoto');
+    localStorage.removeItem('usuarioFotoId');
+    localStorage.removeItem('usuarioEmail');
+    try { window.dispatchEvent(new Event('auth-change')); } catch (e) {}
   }
 
   isAdmin(): boolean {
@@ -83,6 +94,9 @@ export class AuthService {
       localStorage.removeItem('token');
       localStorage.removeItem('usuarioLogado');
       localStorage.removeItem('usuarioId');
+      localStorage.removeItem('usuarioFoto');
+      localStorage.removeItem('usuarioFotoId');
+      localStorage.removeItem('usuarioEmail');
       return true;
     }).catch(err => {
       console.error('deleteUser error', err);
@@ -143,22 +157,66 @@ export class AuthService {
     });
   }
 
+  getProfile(): Promise<any> {
+    if (!this.isBrowser()) return Promise.resolve(null);
+    const requestedId = Number(localStorage.getItem('usuarioId')) || null;
+    if (!requestedId) return Promise.resolve(null);
+    return lastValueFrom(this.http.get(`${this.apiUrl}/usuario/${requestedId}`)).then((res: any) => {
+      try {
+        // Only set the foto if the same user is still logged in (avoid race where logout/login happened)
+        const currentId = Number(localStorage.getItem('usuarioId')) || null;
+        if (res && res.foto_perfil && currentId === requestedId) {
+          localStorage.setItem('usuarioFoto', res.foto_perfil);
+          localStorage.setItem('usuarioFotoId', String(requestedId));
+        }
+        // store email and username as well to keep localStorage in sync
+        if (res && currentId === requestedId) {
+          if (res.email) localStorage.setItem('usuarioEmail', res.email);
+          if (res.nome_usuario || res.nome) localStorage.setItem('usuarioLogado', res.nome_usuario || res.nome);
+        }
+      } catch (e) {}
+      return res;
+    }).catch(err => {
+      console.error('getProfile error', err);
+      throw err;
+    });
+  }
+
   uploadProfilePhoto(file: File): Promise<any> {
     if (!this.isBrowser()) return Promise.resolve(null);
-    const id = Number(localStorage.getItem('usuarioId')) || null;
-    if (!id) return Promise.resolve(null);
+    const requestedId = Number(localStorage.getItem('usuarioId')) || null;
+    if (!requestedId) return Promise.resolve(null);
 
     const fd = new FormData();
     fd.append('foto_perfil', file);
 
-    return lastValueFrom(this.http.post(`${this.apiUrl}/usuario/${id}/foto`, fd)).then((res: any) => {
-      if (res && res.foto_perfil) {
-        // Normalize and store URL for client (prefixed later when displaying)
-        localStorage.setItem('usuarioFoto', res.foto_perfil);
-      }
+    return lastValueFrom(this.http.post(`${this.apiUrl}/usuario/${requestedId}/foto`, fd)).then((res: any) => {
+      try {
+        const currentId = Number(localStorage.getItem('usuarioId')) || null;
+        if (res && res.foto_perfil && currentId === requestedId) {
+          // Normalize and store URL for client (prefixed later when displaying)
+          localStorage.setItem('usuarioFoto', res.foto_perfil);
+          localStorage.setItem('usuarioFotoId', String(requestedId));
+        }
+      } catch (e) {}
       return res;
     }).catch(err => {
       console.error('uploadProfilePhoto error', err);
+      throw err;
+    });
+  }
+
+  deleteProfilePhoto(): Promise<any> {
+    if (!this.isBrowser()) return Promise.resolve(null);
+    const id = Number(localStorage.getItem('usuarioId')) || null;
+    if (!id) return Promise.resolve(null);
+
+    return lastValueFrom(this.http.delete(`${this.apiUrl}/usuario/${id}/foto`)).then((res: any) => {
+      localStorage.removeItem('usuarioFoto');
+      localStorage.removeItem('usuarioFotoId');
+      return res;
+    }).catch(err => {
+      console.error('deleteProfilePhoto error', err);
       throw err;
     });
   }

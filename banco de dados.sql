@@ -19,6 +19,18 @@
 CREATE DATABASE IF NOT EXISTS `banco_dados` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_uca1400_ai_ci */;
 USE `banco_dados`;
 
+-- Copiando estrutura para tabela banco_dados.administrador
+CREATE TABLE IF NOT EXISTS `administrador` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(70) NOT NULL,
+  `senha` varchar(10) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+-- Copiando dados para a tabela banco_dados.administrador: ~1 rows (aproximadamente)
+INSERT INTO `administrador` (`id`, `email`, `senha`) VALUES
+	(1, 'adm@gmail.com', '12345');
+
 -- Copiando estrutura para tabela banco_dados.alimentos
 CREATE TABLE IF NOT EXISTS `alimentos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -34,9 +46,9 @@ CREATE TABLE IF NOT EXISTS `alimentos` (
   PRIMARY KEY (`id`),
   KEY `id_categoria` (`id_categoria`),
   CONSTRAINT `alimentos_ibfk_1` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Copiando dados para a tabela banco_dados.alimentos: ~37 rows (aproximadamente)
+-- Copiando dados para a tabela banco_dados.alimentos: ~38 rows (aproximadamente)
 INSERT INTO `alimentos` (`id`, `nome`, `intolerante_lactose`, `vegetariano`, `vegano`, `ovolacto`, `imagem`, `intolerante_gluten`, `descricao`, `id_categoria`) VALUES
 	(1, 'Soja', 1, 1, 1, 1, 'img/soja.jpg', 1, 'Rica em proteína vegetal, ferro e fibras. Fonte completa de aminoácidos. Receitas: hambúrguer de soja, strogonoff vegano, soja refogada, bowl proteico.', 1),
 	(2, 'Tofu', 1, 1, 1, 1, 'img/tofu.jpg', 1, 'Fonte leve de proteína, cálcio e baixo teor de gordura. Absorve bem temperos. Receitas: tofu grelhado, tofu mexido, moqueca vegana, saladas.', 1),
@@ -74,7 +86,8 @@ INSERT INTO `alimentos` (`id`, `nome`, `intolerante_lactose`, `vegetariano`, `ve
 	(34, 'Pão integral', 1, 1, 1, 1, 'img/pão-integral.jpg', 0, 'Rico em fibras e micronutrientes. Receitas: lanches saudáveis, torradas, mix com ovos.', 2),
 	(35, 'Macarrão integral', 1, 1, 1, 1, 'img/macarrão-integral.jpg', 0, 'Mais nutritivo que o tradicional. Receitas: macarrão integral ao pesto, com legumes, ou com lentilha.', 2),
 	(36, 'Pão de Fermentação Natural', 1, 1, 1, 1, 'img/pão-natural.jpg', 0, 'Mais leve, digestível e nutritivo. Receitas: sanduíches, bruschettas, torradas artesanais.', 2),
-	(37, 'Brócolis', 1, 1, 1, 1, 'img/brocolis.jpg', 1, 'Rico em fibras, vitamina C, cálcio vegetal e antioxidantes. Auxilia na imunidade e na saúde intestinal. ', 2);
+	(37, 'Brócolis', 1, 1, 1, 1, 'img/brocolis.jpg', 1, 'Rico em fibras, vitamina C, cálcio vegetal e antioxidantes. Auxilia na imunidade e na saúde intestinal. ', 2),
+	(78, 'columbinna', 0, 1, 0, 0, 'uploads/1765218008178.webp', 0, 'deusa da lua', NULL);
 
 -- Copiando estrutura para tabela banco_dados.categorias
 CREATE TABLE IF NOT EXISTS `categorias` (
@@ -90,61 +103,83 @@ INSERT INTO `categorias` (`id`, `nome`, `imagem`) VALUES
 	(2, 'Carboidrato', NULL),
 	(3, 'Gordura', NULL);
 
--- Copiando estrutura para tabela banco_dados.usuario
-CREATE TABLE IF NOT EXISTS `usuario` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nome_usuario` varchar(20) NOT NULL,
-  `senha` varchar(8) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `nome_usuario` (`nome_usuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
--- Copiando dados para a tabela banco_dados.usuario: ~12 rows (aproximadamente)
-INSERT INTO `usuario` (`id`, `nome_usuario`, `senha`) VALUES
-	(1, 'mariena', '1234567'),
-	(2, 'luiztxt', '12345678'),
-	(3, 'thata', '1234567'),
-	(4, 'barilebobo', '1234567'),
-	(5, 'luiz', '1234'),
-	(6, 'clorinde', '1234r'),
-	(7, 'thalita', '07052008'),
-	(8, 'roberto', '1234'),
-	(9, 'nanatycca', 'Nataly@1'),
-	(10, 'lene', '134340'),
-	(11, 'aaa', 'aaa'),
-	(12, 'Mariana', '1234'),
-	(13, 'Maria Clara', '1234');
-
 -- Copiando estrutura para tabela banco_dados.favoritos
 CREATE TABLE IF NOT EXISTS `favoritos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_usuario` int(11) NOT NULL,
   `id_alimento` int(11) NOT NULL,
-  `data_criacao` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `data_criacao` timestamp NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_favorito` (`id_usuario`, `id_alimento`),
+  UNIQUE KEY `unique_favorito` (`id_usuario`,`id_alimento`),
   KEY `id_usuario` (`id_usuario`),
   KEY `id_alimento` (`id_alimento`),
   CONSTRAINT `favoritos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`) ON DELETE CASCADE,
   CONSTRAINT `favoritos_ibfk_2` FOREIGN KEY (`id_alimento`) REFERENCES `alimentos` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=214 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+-- Copiando dados para a tabela banco_dados.favoritos: ~21 rows (aproximadamente)
+INSERT INTO `favoritos` (`id`, `id_usuario`, `id_alimento`, `data_criacao`) VALUES
+	(41, 16, 3, '2025-12-02 11:51:32'),
+	(163, 17, 3, '2025-12-02 16:20:12'),
+	(164, 17, 7, '2025-12-02 16:20:51'),
+	(165, 17, 9, '2025-12-02 16:21:01'),
+	(166, 7, 4, '2025-12-02 16:26:40'),
+	(167, 7, 6, '2025-12-02 16:26:48'),
+	(168, 7, 7, '2025-12-02 16:26:51'),
+	(169, 7, 8, '2025-12-02 16:26:54'),
+	(170, 7, 9, '2025-12-02 16:26:55'),
+	(171, 7, 16, '2025-12-02 16:27:01'),
+	(172, 7, 18, '2025-12-02 16:27:03'),
+	(173, 7, 20, '2025-12-02 16:27:05'),
+	(174, 7, 24, '2025-12-02 16:27:08'),
+	(179, 18, 18, '2025-12-02 16:31:09'),
+	(180, 18, 29, '2025-12-02 16:34:59'),
+	(183, 19, 2, '2025-12-02 16:38:04'),
+	(184, 20, 4, '2025-12-02 16:52:26'),
+	(185, 20, 5, '2025-12-02 16:52:35'),
+	(186, 20, 27, '2025-12-02 16:53:01'),
+	(187, 21, 24, '2025-12-02 16:57:20'),
+	(209, 22, 3, '2025-12-04 13:55:01');
+
+-- Copiando estrutura para tabela banco_dados.usuario
+CREATE TABLE IF NOT EXISTS `usuario` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome_usuario` varchar(20) NOT NULL,
+  `senha` varchar(8) NOT NULL,
+  `email` varchar(80) NOT NULL,
+  `foto_perfil` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `nome_usuario` (`nome_usuario`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+-- Copiando dados para a tabela banco_dados.usuario: ~23 rows (aproximadamente)
+INSERT INTO `usuario` (`id`, `nome_usuario`, `senha`, `email`, `foto_perfil`) VALUES
+	(1, 'mariena', '1234567', '', NULL),
+	(2, 'luiztxt', '12345678', '', NULL),
+	(3, 'thata', '1234567', '', NULL),
+	(4, 'barilebobo', '1234567', '', NULL),
+	(6, 'clorinde', '1234r', '', NULL),
+	(7, 'thalita', '07052008', '', NULL),
+	(8, 'roberto', '1234', '', NULL),
+	(9, 'nanatycca', 'Nataly@1', '', NULL),
+	(10, 'lene', '134340', '', NULL),
+	(11, 'aaa', 'aaa', '', NULL),
+	(12, 'Mariana', '1234', '', NULL),
+	(13, 'Maria Clara', '1234', '', NULL),
+	(15, 'samuelxavier', '123456', '', NULL),
+	(16, 'lulu', '1234', '', NULL),
+	(17, 'oiee', '1234', '', NULL),
+	(18, 'mavie', 'mavie12', '', NULL),
+	(19, 'Luiz Henrique ', '1234', '', NULL),
+	(20, 'eve', '123', '', NULL),
+	(21, 'ricardo', '1234', '', NULL),
+	(22, 'murillo', '12345', '', NULL),
+	(23, 'lululu', '1234', 'luiz@gmail.com', NULL),
+	(25, 'Mariana Rodrigues', '1234', 'mariana@gmail.com', NULL),
+	(26, 'Luiz', '12345', 'luiz.lopes@gmail.com', NULL);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
-
-CREATE TABLE IF NOT EXISTS `favoritos` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_usuario` int(11) NOT NULL,
- ` id_alimento` int(11) NOT NULL,
-  `data_criacao` timestamp DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_favorito` (`id_usuario`, `id_alimento`),
-  KEY `id_usuario `(`id_usuario`),
-  KEY `id_alimento` (`id_alimento`),
-  CONSTRAINT `favoritos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario `(id) ON DELETE CASCADE,
-  CONSTRAINT `favoritos_ibfk_2` FOREIGN KEY (`id_alimento`) REFERENCES `alimentos` (id) ON DELETE CASCADE
-);
-

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild, ElementRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -13,10 +13,38 @@ import { Router } from '@angular/router';
 export class Navbar {
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private cd: ChangeDetectorRef) {}
+  ngOnInit(): void {
+    // Listen for auth changes triggered by AuthService (logout/login)
+    try {
+      window.addEventListener('auth-change', () => this.refreshFromStorage());
+    } catch (e) {}
+    this.refreshFromStorage();
+    try { window.addEventListener('section-change', this._onSectionChange); } catch (e) {}
+  }
+
+  ngOnDestroy(): void {
+    try { window.removeEventListener('section-change', this._onSectionChange); } catch (e) {}
+  }
+
+  refreshFromStorage() {
+    try {
+      const name = localStorage.getItem('usuarioLogado');
+      const id = Number(localStorage.getItem('usuarioId')) || null;
+      this.usuarioNome = name;
+      this.usuarioId = id;
+    } catch (e) {}
+  }
   @Input() usuarioNome: string | null = null;
-  @Input() activeSection: string | null = null;
+  private _activeSection: string | null = null;
+  @Input()
+  set activeSection(v: string | null) {
+    this._activeSection = v;
+    try { this.cd.detectChanges(); } catch (e) {}
+  }
+  get activeSection(): string | null { return this._activeSection; }
   @Input() usuarioId: number | null = null;
+  @Input() usuarioFoto: string | null = null;
   @Output() sairEvent = new EventEmitter<void>();
   @Output() search = new EventEmitter<string>();
   @Output() navigate = new EventEmitter<string>();
@@ -29,6 +57,21 @@ export class Navbar {
   @Output() deleteAccount = new EventEmitter<string>();
 
   termo: string = '';
+
+  get fotoUrl(): string | null {
+    try {
+      const cached = localStorage.getItem('usuarioFoto');
+      const cachedId = Number(localStorage.getItem('usuarioFotoId')) || null;
+      // prefer explicit Input, otherwise use cached only when owner matches current usuarioId
+      const p = this.usuarioFoto || (this.usuarioId && cached && cachedId === this.usuarioId ? cached : null);
+      if (!p) return null;
+      if (p.startsWith('http://') || p.startsWith('https://')) return p;
+      const prefix = 'http://localhost:3000';
+      return p.startsWith('/') ? `${prefix}${p}` : `${prefix}/${p}`;
+    } catch (e) {
+      return null;
+    }
+  }
 
   // Profile tab local state
   @Output() openProfilePage = new EventEmitter<void>();
@@ -119,5 +162,30 @@ export class Navbar {
 
   openPerfil() {
     this.openProfilePage.emit();
+  }
+
+  private _onSectionChange = (ev: any) => {
+    try {
+      const d = ev && ev.detail ? ev.detail : null;
+      if (!d) return;
+      try { this.applyActiveClass(String(d.mapped || '')); } catch (e) {}
+      try { this.cd.detectChanges(); } catch (e) {}
+    } catch (e) {}
+  }
+
+  private applyActiveClass(mapped: string) {
+    try {
+      const links = Array.from(document.querySelectorAll('.nav-link')) as HTMLElement[];
+      for (const el of links) {
+        try {
+          const target = el.getAttribute('data-section') || '';
+          if (target && mapped && target === mapped) {
+            el.classList.add('active');
+          } else {
+            el.classList.remove('active');
+          }
+        } catch (e) {}
+      }
+    } catch (e) {}
   }
 }

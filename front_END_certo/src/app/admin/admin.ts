@@ -14,14 +14,13 @@ import { ToastService } from '../services/toast.service';
   styleUrls: ['./admin.css']
 })
 export class AdminComponent {
-  usuarios: any[] = [];
   alimentos: any[] = [];
+  categorias: any[] = [];
 
   // Form model for new alimento
   novo = { nome: '', descricao: '', imagem: '', vegetariano: false, vegano: false, ovolacto: false, intolerante_lactose: false, intolerante_gluten: false, id_categoria: null };
 
   // UI: collapse state for panels
-  showUsuarios: boolean = true;
   showAlimentos: boolean = true;
   editingId: number | null = null;
 
@@ -65,15 +64,8 @@ export class AdminComponent {
       console.warn('Acesso admin sem permissão');
       return;
     }
-    this.carregarUsuarios();
     this.carregarAlimentos();
-  }
-
-  carregarUsuarios() {
-    this.http.get<any[]>('http://localhost:3000/admin/usuarios').subscribe({
-      next: res => this.usuarios = res,
-      error: err => console.error('Erro ao carregar usuários', err)
-    });
+    this.carregarCategorias();
   }
 
   carregarAlimentos() {
@@ -83,8 +75,11 @@ export class AdminComponent {
     });
   }
 
-  toggleUsuarios() {
-    this.showUsuarios = !this.showUsuarios;
+  carregarCategorias() {
+    this.http.get<any[]>('http://localhost:3000/alimentos/categorias').subscribe({
+      next: res => this.categorias = res,
+      error: err => console.error('Erro ao carregar categorias', err)
+    });
   }
 
   toggleAlimentos() {

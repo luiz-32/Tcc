@@ -40,6 +40,37 @@ export class PerfilComponent implements OnInit {
       this.usuarioNome = null;
       this.usuarioId = null;
     }
+    // try to refresh profile (foto_perfil) from server and scroll to top of profile
+    if (this.usuarioId) {
+      this.auth.getProfile().then((res: any) => {
+        if (res) {
+          if (res.email) this.email = res.email;
+          if (res.nome_usuario || res.nome) this.usuarioNome = res.nome_usuario || res.nome || this.usuarioNome;
+          // keep novoNome in sync
+          this.novoNome = this.usuarioNome || this.novoNome;
+        }
+      }).catch(() => {});
+    }
+
+    // Scroll profile into view (ensure the top of the profile is visible)
+    try {
+      const el = document.querySelector('.perfil-container');
+      if (el && el instanceof HTMLElement) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      else window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (e) {}
+  }
+
+  get fotoUrl(): string | null {
+    try {
+      const p = localStorage.getItem('usuarioFoto');
+      if (!p) return null;
+      if (p.startsWith('http://') || p.startsWith('https://')) return p;
+      // If the path already starts with a slash, don't duplicate
+      const prefix = 'http://localhost:3000';
+      return p.startsWith('/') ? `${prefix}${p}` : `${prefix}/${p}`;
+    } catch (e) {
+      return null;
+    }
   }
 
   pickFile(ev: Event) {
@@ -115,5 +146,26 @@ export class PerfilComponent implements OnInit {
         this.toast.show('Falha ao excluir conta.', 'error');
       }
     });
+  }
+
+  isDeletingPhoto: boolean = false;
+
+  async deletePhoto() {
+    if (!confirm('Deseja remover sua foto de perfil?')) return;
+    this.isDeletingPhoto = true;
+    this.toast.show('Removendo foto...', 'info');
+    try {
+      await this.auth.deleteProfilePhoto();
+      // refresh profile to ensure UI updates
+      await this.auth.getProfile().catch(() => {});
+      localStorage.removeItem('usuarioFoto');
+      this.selectedFileName = null;
+      this.toast.show('Foto removida com sucesso.', 'success');
+    } catch (err) {
+      console.error('Erro ao deletar foto de perfil', err);
+      this.toast.show('Falha ao remover foto.', 'error');
+    } finally {
+      this.isDeletingPhoto = false;
+    }
   }
 }

@@ -4,6 +4,21 @@
   <div class="perfil-box">
     <h1>Meu Perfil</h1>
 
+    <!-- Header area with avatar and quick actions -->
+    <div class="perfil-header-area">
+      <div class="header-avatar">
+        <img *ngIf="usuarioId && fotoUrl" [src]="fotoUrl" alt="Foto de perfil" class="perfil-img" />
+        <div *ngIf="!fotoUrl" class="perfil-placeholder">Sem foto</div>
+      </div>
+      <div class="header-info">
+        <strong class="header-name">{{ usuarioNome || 'Usuário' }}</strong>
+        <div class="header-actions">
+          <label class="btn btn-secondary header-btn">Escolher foto<input type="file" accept="image/*" (change)="pickFile($event)" hidden></label>
+          <button *ngIf="fotoUrl" class="btn btn-danger header-btn" (click)="deletePhoto()" [disabled]="isDeletingPhoto">{{ isDeletingPhoto ? 'Removendo...' : 'Remover foto' }}</button>
+        </div>
+      </div>
+    </div>
+
     <div class="campo">
       <label>Nome de usuário</label>
       <input type="text" [(ngModel)]="novoNome" name="novoNome" />
@@ -15,11 +30,7 @@
       <input type="email" [(ngModel)]="email" name="email" />
     </div>
 
-    <div class="campo">
-      <label>Foto de Perfil</label>
-      <input type="file" accept="image/*" (change)="pickFile($event)" />
-      <small *ngIf="selectedFileName">{{ selectedFileName }}</small>
-    </div>
+    
 
     <hr />
 

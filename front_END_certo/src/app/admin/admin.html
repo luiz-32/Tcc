@@ -6,20 +6,7 @@
     </div>
   </div>
 
-  <section class="panel">
-    <div class="panel-header" (click)="toggleUsuarios()" role="button" aria-expanded="{{showUsuarios}}">
-      <h3>Usuários</h3>
-      <button class="toggle-btn" type="button">{{ showUsuarios ? 'Ocultar' : 'Mostrar' }}</button>
-    </div>
-    <div class="panel-body" [class.collapsed]="!showUsuarios">
-      <div class="panel-actions">
-        <button (click)="carregarUsuarios()" type="button">Recarregar</button>
-      </div>
-      <ul>
-        <li *ngFor="let u of usuarios">{{u.id}} — {{u.nome_usuario || u.email}}</li>
-      </ul>
-    </div>
-  </section>
+  <!-- Usuários panel removed as requested -->
 
   <section class="panel">
     <div class="panel-header" (click)="toggleAlimentos()" role="button" aria-expanded="{{showAlimentos}}">
@@ -34,7 +21,7 @@
         <li *ngFor="let a of alimentos">
           <div class="alimento-row">
             <img *ngIf="a.imagem" [src]="('http://localhost:3000/' + a.imagem)" class="thumb" />
-            <div class="alimento-info">{{a.id}} — {{a.nome}}</div>
+            <div class="alimento-info">{{a.id}} — {{a.nome}} <span class="cat-label" *ngIf="a.id_categoria">(categoria: {{a.id_categoria}})</span></div>
             <div class="alimento-actions">
               <button type="button" (click)="editAlimento(a)">Editar</button>
               <button type="button" (click)="deleteAlimento(a.id)">Excluir</button>
@@ -56,6 +43,14 @@
       <div class="form-row">
         <label>Descrição</label>
         <textarea [(ngModel)]="novo.descricao" name="descricao" rows="3" placeholder="Breve descrição..."></textarea>
+      </div>
+
+      <div class="form-row">
+        <label>Categoria</label>
+        <select [(ngModel)]="novo.id_categoria" name="id_categoria">
+          <option [ngValue]="null">-- Sem categoria --</option>
+          <option *ngFor="let c of categorias" [value]="c.id">{{ c.id }} — {{ c.nome }}</option>
+        </select>
       </div>
 
       <div class="form-row file-row">
