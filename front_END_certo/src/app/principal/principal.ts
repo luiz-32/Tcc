@@ -260,7 +260,9 @@ export class PrincipalComponent implements OnInit, OnDestroy {
       const voltarBtn = alimentos.querySelector('.voltar') as HTMLElement | null;
       if (!voltarBtn) return;
       const navbarEl = document.querySelector('nav') as HTMLElement | null;
-      const navbarHeight = navbarEl ? navbarEl.offsetHeight : 80;
+      let navbarHeight = navbarEl ? navbarEl.offsetHeight : 80;
+      // Ensure a sensible minimum so the button won't overlap when navbar isn't ready
+      navbarHeight = Math.max(navbarHeight, 64);
       if (alimentos.classList.contains('voltar-fixed')) {
         // place a bit below the navbar so it doesn't overlap
         const offset = navbarHeight + 8;
@@ -280,7 +282,10 @@ export class PrincipalComponent implements OnInit, OnDestroy {
   private updateLayoutForNavbar(): void {
     try {
       const navbarEl = document.querySelector('nav') as HTMLElement | null;
-      const navbarHeight = navbarEl ? navbarEl.offsetHeight : 80;
+      let navbarHeight = navbarEl ? navbarEl.offsetHeight : 80;
+      // If navbar hasn't fully rendered yet, enforce a minimum spacing so
+      // the top content (banner) won't sit flush under the navbar.
+      navbarHeight = Math.max(navbarHeight, 64);
       // set top margin on principal container so content is not hidden under the fixed navbar
       const principal = document.querySelector('.principal-container') as HTMLElement | null;
       if (principal) {
@@ -487,6 +492,13 @@ pesquisarAlimentos(termo: string): void {
   );
 
   this.resultadosPesquisa = this.removerDuplicados(this.resultadosPesquisa);
+
+  // Após atualizar resultados, rolar para o topo do conteúdo (abaixo da navbar)
+  setTimeout(() => {
+    try { this.scrollToTopContent(60); } catch (e) {}
+    try { this.activeSection = 'home'; } catch (e) {}
+    try { window.dispatchEvent(new CustomEvent('section-change', { detail: { chosen: 'home', mapped: 'home', ts: Date.now() } })); } catch (e) {}
+  }, 120);
 }
 
 

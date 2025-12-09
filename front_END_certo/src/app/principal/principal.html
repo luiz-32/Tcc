@@ -28,8 +28,8 @@
     <!-- CAPA -->
     <div class="carrosel-unico">
       <img src="foto/capa.jpg" alt="Capa" class="carrosel-img">
-      <!-- Mostrar apenas o nome do usuário quando logado -->
-      <h1 class="bemvindo" *ngIf="usuarioNome">BEM-VINDO(A), {{ usuarioNome }}</h1>
+      <!-- Mostrar saudação sempre; adicionar nome quando houver usuário logado -->
+      <h1 class="bemvindo">BEM-VINDO(A)<span *ngIf="usuarioNome">, {{ usuarioNome }}</span></h1>
     </div>
 
     <!-- BOTÃO DE FAVORITOS -->

@@ -576,7 +576,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  /* ensure modal overlays the navbar (navbar z-index ~2000) */
+  z-index: 3000;
   animation: fadeIn 0.3s ease;
 }
 
@@ -598,6 +599,8 @@
   text-align: center;
   color: #333;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 3001;
   animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
