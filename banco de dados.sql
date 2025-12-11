@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `alimentos` (
   PRIMARY KEY (`id`),
   KEY `id_categoria` (`id_categoria`),
   CONSTRAINT `alimentos_ibfk_1` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- Copiando dados para a tabela banco_dados.alimentos: ~38 rows (aproximadamente)
 INSERT INTO `alimentos` (`id`, `nome`, `intolerante_lactose`, `vegetariano`, `vegano`, `ovolacto`, `imagem`, `intolerante_gluten`, `descricao`, `id_categoria`) VALUES
@@ -87,7 +87,7 @@ INSERT INTO `alimentos` (`id`, `nome`, `intolerante_lactose`, `vegetariano`, `ve
 	(35, 'Macarrão integral', 1, 1, 1, 1, 'img/macarrão-integral.jpg', 0, 'Mais nutritivo que o tradicional. Receitas: macarrão integral ao pesto, com legumes, ou com lentilha.', 2),
 	(36, 'Pão de Fermentação Natural', 1, 1, 1, 1, 'img/pão-natural.jpg', 0, 'Mais leve, digestível e nutritivo. Receitas: sanduíches, bruschettas, torradas artesanais.', 2),
 	(37, 'Brócolis', 1, 1, 1, 1, 'img/brocolis.jpg', 1, 'Rico em fibras, vitamina C, cálcio vegetal e antioxidantes. Auxilia na imunidade e na saúde intestinal. ', 2),
-	(78, 'columbinna', 0, 1, 0, 0, 'uploads/1765218008178.webp', 0, 'deusa da lua', NULL);
+	(81, 'Manteiga', 0, 1, 0, 0, NULL, 1, 'Usada como gordura', 3);
 
 -- Copiando estrutura para tabela banco_dados.categorias
 CREATE TABLE IF NOT EXISTS `categorias` (
@@ -115,31 +115,28 @@ CREATE TABLE IF NOT EXISTS `favoritos` (
   KEY `id_alimento` (`id_alimento`),
   CONSTRAINT `favoritos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`) ON DELETE CASCADE,
   CONSTRAINT `favoritos_ibfk_2` FOREIGN KEY (`id_alimento`) REFERENCES `alimentos` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=214 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=220 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- Copiando dados para a tabela banco_dados.favoritos: ~21 rows (aproximadamente)
-INSERT INTO `favoritos` (`id`, `id_usuario`, `id_alimento`, `data_criacao`) VALUES
-	(41, 16, 3, '2025-12-02 11:51:32'),
-	(163, 17, 3, '2025-12-02 16:20:12'),
-	(164, 17, 7, '2025-12-02 16:20:51'),
-	(165, 17, 9, '2025-12-02 16:21:01'),
-	(166, 7, 4, '2025-12-02 16:26:40'),
-	(167, 7, 6, '2025-12-02 16:26:48'),
-	(168, 7, 7, '2025-12-02 16:26:51'),
-	(169, 7, 8, '2025-12-02 16:26:54'),
-	(170, 7, 9, '2025-12-02 16:26:55'),
-	(171, 7, 16, '2025-12-02 16:27:01'),
-	(172, 7, 18, '2025-12-02 16:27:03'),
-	(173, 7, 20, '2025-12-02 16:27:05'),
-	(174, 7, 24, '2025-12-02 16:27:08'),
-	(179, 18, 18, '2025-12-02 16:31:09'),
-	(180, 18, 29, '2025-12-02 16:34:59'),
-	(183, 19, 2, '2025-12-02 16:38:04'),
-	(184, 20, 4, '2025-12-02 16:52:26'),
-	(185, 20, 5, '2025-12-02 16:52:35'),
-	(186, 20, 27, '2025-12-02 16:53:01'),
-	(187, 21, 24, '2025-12-02 16:57:20'),
-	(209, 22, 3, '2025-12-04 13:55:01');
+
+-- Copiando estrutura para tabela banco_dados.password_resets
+CREATE TABLE IF NOT EXISTS `password_resets` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `usuario_id` int(11) NOT NULL,
+  `codigo` varchar(32) NOT NULL,
+  `expires_at` datetime NOT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`),
+  KEY `codigo` (`codigo`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+-- Copiando dados para a tabela banco_dados.password_resets: ~4 rows (aproximadamente)
+INSERT INTO `password_resets` (`id`, `usuario_id`, `codigo`, `expires_at`, `created_at`) VALUES
+	(1, 28, '607174', '2025-12-09 14:52:10', '2025-12-09 14:37:10'),
+	(2, 28, '994970', '2025-12-09 14:52:11', '2025-12-09 14:37:11'),
+	(3, 28, '325110', '2025-12-09 14:58:36', '2025-12-09 14:43:36'),
+	(4, 28, '770856', '2025-12-09 14:58:40', '2025-12-09 14:43:40');
 
 -- Copiando estrutura para tabela banco_dados.usuario
 CREATE TABLE IF NOT EXISTS `usuario` (
@@ -150,33 +147,9 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `foto_perfil` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome_usuario` (`nome_usuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Copiando dados para a tabela banco_dados.usuario: ~23 rows (aproximadamente)
-INSERT INTO `usuario` (`id`, `nome_usuario`, `senha`, `email`, `foto_perfil`) VALUES
-	(1, 'mariena', '1234567', '', NULL),
-	(2, 'luiztxt', '12345678', '', NULL),
-	(3, 'thata', '1234567', '', NULL),
-	(4, 'barilebobo', '1234567', '', NULL),
-	(6, 'clorinde', '1234r', '', NULL),
-	(7, 'thalita', '07052008', '', NULL),
-	(8, 'roberto', '1234', '', NULL),
-	(9, 'nanatycca', 'Nataly@1', '', NULL),
-	(10, 'lene', '134340', '', NULL),
-	(11, 'aaa', 'aaa', '', NULL),
-	(12, 'Mariana', '1234', '', NULL),
-	(13, 'Maria Clara', '1234', '', NULL),
-	(15, 'samuelxavier', '123456', '', NULL),
-	(16, 'lulu', '1234', '', NULL),
-	(17, 'oiee', '1234', '', NULL),
-	(18, 'mavie', 'mavie12', '', NULL),
-	(19, 'Luiz Henrique ', '1234', '', NULL),
-	(20, 'eve', '123', '', NULL),
-	(21, 'ricardo', '1234', '', NULL),
-	(22, 'murillo', '12345', '', NULL),
-	(23, 'lululu', '1234', 'luiz@gmail.com', NULL),
-	(25, 'Mariana Rodrigues', '1234', 'mariana@gmail.com', NULL),
-	(26, 'Luiz', '12345', 'luiz.lopes@gmail.com', NULL);
+-- Copiando dados para a tabela banco_dados.usuario: ~0 rows (aproximadamente)
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
