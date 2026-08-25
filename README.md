@@ -50,9 +50,9 @@ O projeto possibilitou aplicar na prática conhecimentos adquiridos durante o cu
 
 ##  Desenvolvedor
 
-**Luiz Lopes**
-**Mariana Atanes**
-**Murillo Barile**
+**Luiz Lopes,**
+**Mariana Atanes,**
+**Murillo Barile,**
 **Thalita Figueiroa**
 
 Projeto desenvolvido para fins acadêmicos como Trabalho de Conclusão de Curso (TCC).
